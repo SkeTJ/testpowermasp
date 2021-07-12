@@ -10,7 +10,7 @@ import wmi
 
 #Server IP and Port
 HOST = '127.0.0.1' #Temporary localhost for testing (Make sure to use the client's IP during production
-PORT = 69420
+PORT = 21420
 
 #Start server with the given host and port given and listen for a client
 server = socket.socket()
