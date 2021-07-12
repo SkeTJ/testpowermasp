@@ -3,7 +3,7 @@ import subprocess
 
 #Set IP address and PORT to the server
 SERVER_HOST = '127.0.0.1' #Temporary localhost for testing (Make sure to use the client's IP during production
-SERVER_PORT = 69420
+SERVER_PORT = 21420
 
 #Connect to server with given IP and PORT
 client.connect(SERVER_HOST, SERVER_PORT)
