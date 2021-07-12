@@ -9,7 +9,7 @@ import wmi
 #master programmer, use what you want. imma just do the functions that i was ASSigned
 
 #Server IP and Port
-HOST = "127.0.0.1" #Temporary localhost for testing (Make sure to use the client's IP during production
+HOST = '127.0.0.1' #Temporary localhost for testing (Make sure to use the client's IP during production
 PORT = 69420
 
 #Start server with the given host and port given and listen for a client
