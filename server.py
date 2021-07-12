@@ -1,29 +1,38 @@
 import os
 import socket
-import tkinter as tk
-import kivy #owo
-import wmi
 
-#ngl i think using kivy would be more ni1cer for the ui than tkinter coz it looks more modern, besides,
-#its wat i use for ma fyp too :D -jul sux hehehe omg, its u (only old ppl know this reference)
-#master programmer, use what you want. imma just do the functions that i was ASSigned
+import kivy
+import kivymd
+from kivymd.app import MDApp
+from kivy.lang import Builder
 
-#Server IP and Port
-HOST = '127.0.0.1' #Temporary localhost for testing (Make sure to use the client's IP during production
-PORT = 21420
+KV = '''
+MDScreen:
+    MDRectangleFlatButton:
+        text: "Network Info"
+        pos_hint: {"center_x": .5, "center_y": .5}     
+'''
 
-#Start server with the given host and port given and listen for a client
-server = socket.socket()
-server.bind((HOST,PORT))
-print('Server started!')
+class Main(MDApp):
+    def build(self):
+        ###Server IP and Port
+        HOST = '127.0.0.1' #Temporary localhost for testing (Make sure to use the client's IP during production
+        PORT = 21420
 
-#A max of one client can be listend at a time
-server.listen(1)
-print('Listening for a client connection to be established...')
+        #Start server with the given host and port given and listen for a client
+        server = socket.socket()
+        server.bind((HOST,PORT))
+        print('Server started!')
 
-#Check whether connection is established
-curConn, incAddress = server.accept()
-print('A client has established connection!')
+        #A max of one client can be listend at a time
+        server.listen(1)
+        print('Listening for a client connection to be established...')
+
+        #Check whether connection is established
+        curConn, incAddress = server.accept()
+        print('A client has established connection!')
+        
+        return Builder.load_string(KV)
 
 #Juls shizzle
 #This is to gather the client's information about their network
@@ -41,11 +50,4 @@ def NetworkInfo():
     print('Output: ', output)
     break
 
-#Zees shizzle
-def cpu_usage():
-  
-def processlist():
-   
-def services():
-    
-  
+Main().run()
