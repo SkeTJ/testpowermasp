@@ -18,14 +18,14 @@ server.bind((HOST,PORT))
 server.listen()
 
 #Check whether connection is established
-connection, incAddress = server.accept()
-with connection:
+curConn, incAddress = server.accept()
+with curConn:
   print('Connected with: ', incAddress)
   while True:
-    data = connection.receiver(1024)
+    data = curConn.receiver(1024)
     if not data:
       break
-     connection.sendall(data)
+     curConn.sendall(data)
 
 def cpu_usage():
   
