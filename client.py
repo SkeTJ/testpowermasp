@@ -6,7 +6,8 @@ SERVER_HOST = '127.0.0.1' #Temporary localhost for testing (Make sure to use the
 SERVER_PORT = 21420
 
 #Connect to server with given IP and PORT
-client.connect(SERVER_HOST, SERVER_PORT)
+client = socket.socket()
+client.connect((SERVER_HOST, SERVER_PORT))
 
 #When connection is established
 while True:
