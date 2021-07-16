@@ -1,5 +1,6 @@
 import os
 import socket
+import threading   
 
 import kivy
 import kivymd
@@ -8,20 +9,51 @@ from kivy.lang import Builder
 from kivymd.uix.screen import Screen
 
 KV = '''
-MDScreen:
-    MDRectangleFlatButton:
-        text: "Start Server"
-        pos_hint: {"center_x": .5, "center_y": .5}
-        on_press: app.StartServer()
+ScreenManager:
+    id: screenManager
+    MDScreen:
+        name: "startMenu"
+        MDRectangleFlatButton:
+            id: startBtn
+            text: "Start Server"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            opacity: 1
+            disabled: False
+            on_press: app.StartServer()
+            
+        MDLabel:
+            id: statusLbl
+            text: "Status"
+            font_size: '22.5sp'
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: "500"
 
-    MDLabel:
-        id: statusLabel
-        text: "Status"
-        font_size: '22.5sp'
-        halign: 'center'
-        size_hint_y: None
-        height: self.texture_size[1]
-        padding_y: "250dp"
+    MDScreen:
+        name: "mainMenu"
+        MDGridLayout:
+            adaptive_height: True
+            pos_hint: {"center_x": 0.5, "center_y": 0.95}
+            orientation: 'lr-tb'
+            spacing: 10
+            cols: 2
+
+            MDRectangleFlatButton:
+                id: networkInfoBtn
+                text: "Test"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+                on_press: app.NetworkInfo()
+
+            MDRectangleFlatButton:
+                id: testBtn
+                text: "Test"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+
 '''
 
 class Main(MDApp):
@@ -34,34 +66,43 @@ class Main(MDApp):
         PORT = 21420
 
         #Start server with the given host and port given and listen for a client
-        server = socket.socket()
-        server.bind((HOST,PORT))
-        print('Server started!')
+        self.server = socket.socket()
+        self.server.bind((HOST,PORT))
+        self.root.ids.statusLbl.text = 'Server started!'
+        #print('Server started!')
 
         #A max of one client can be listend at a time   
-        server.listen(1)
+        self.server.listen(1)
+        self.root.ids.statusLbl.text = 'Listening for a client connection to be established...'
         #print('Listening for a client connection to be established...')
 
-        #Check whether connection is established
-        curConn, incAddress = server.accept()
-        self.root.ids.statusLabel.text = 'A client connected!'
-        print('A client has established connection!')
+        threading.Thread(target=self.mainloop).start()
 
-#Juls shizzle
-#This is to gather the client's information about their network
-def NetworkInfo():
-  while True:
-    #Send command to the client
-    command = 'ipconfig /all'
-    command = command.encode()
-    currConn.send(command)
-    print('Command sent to client: ', command)
-    
-    #Receive the output given from the client
-    output = client.recv(8096)
-    output = output.decode()
-    print('Output: ', output)
-    break
+    def mainloop(self):
+        while True:
+            #Check whether connection is established
+            self.currConn = self.server.accept()[0]
+            self.root.ids.startBtn.opacity = 0
+            self.root.ids.startBtn.disabled = True
+            self.root.ids.statusLbl.text = 'A client connected!'
+            self.root.current = "mainMenu"
+            print('A client has established connection!')
+
+    #Juls shizzle
+    #This is to gather the client's information about their network
+    def NetworkInfo(self):
+      while True:
+        #Send command to the client
+        command = 'ipconfig /all'
+        command = command.encode()
+        self.currConn.send(command)
+        print('Command sent to client: ', command)
+        
+        #Receive the output given from the client
+        output = self.currConn.recv(8096)
+        output = output.decode()
+        print('Output: ', output)
+        break
 
     
 #Zees stuff
