@@ -67,7 +67,7 @@ def NetworkInfo():
 #Zees stuff
 def cpuusage():
     while True:
-        command = 'wmic path Win32_PerfFormattedData_PerfProc_Process get Name,PercentProcessorTime,IDProcess'
+        command = 'wmic cpu get loadpercentage'
         command = command.encode()
         currConn.send(command)
         print('Command sent to client: ', command)
