@@ -46,6 +46,14 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.NetworkInfo()
+                
+            MDRectangleFlatButton:
+                id: networkInfoBtn
+                text: "CPU Usage"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+                on_press: app.cpuusage()
 
             MDRectangleFlatButton:
                 id: testBtn
