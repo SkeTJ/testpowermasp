@@ -118,7 +118,7 @@ class Main(MDApp):
     # Zees stuff
     def cpuusage(self):
         while True:
-            command = 'wmic cpu get loadpercentage'     # Doesn't return anything
+            command = '@for /f "skip=1" %p in ('wmic cpu get loadpercentage') do @echo %p%'     #Try this now
             command = command.encode()
             self.currConn.send(command)
             print('Command sent to client: ', command)
@@ -138,9 +138,9 @@ class Main(MDApp):
             print('Command sent to client: ', command)
 
             # receive output from client
-            output = self.currConn.recv(8096)  # Depending on how many tasks are running,
-            output = output.decode()           # e.g. for my machine i probably need 3x this buffer 
-            print('Output: ', output)          # to fit the results bc i have lots of processes running
+            output = self.currConn.recv(20480)  # Changed buffer
+            output = output.decode()           
+            print('Output: ', output)          
             break
 
 
