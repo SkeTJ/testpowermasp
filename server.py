@@ -39,7 +39,7 @@ ScreenManager:
             
         MDGridLayout:
             adaptive_height: True
-            pos_hint: {"center_x": 0.6, "center_y": 0.8}
+            pos_hint: {"center_x": 0.9, "center_y": 0.5}
             orientation: 'lr-tb'
             spacing: 10
             cols: 2
@@ -174,6 +174,7 @@ class Main(MDApp):
             self.root.ids.consoleField.text = output
             break
 
+    #Gather Operating System Information
     def OSInfo(self):
         while True:
             command = 'systeminfo | findstr /C:"OS"'
@@ -185,6 +186,7 @@ class Main(MDApp):
             break
 
     # Zees stuff
+    #Get the % of CPU Utilization
     def CpuUsage(self):
         while True:
             command = 'wmic cpu get loadpercentage'
@@ -195,6 +197,7 @@ class Main(MDApp):
             print('Output: ', output)
             break
 
+    #Get current running tasks
     def Tasks(self):
         while True:
             # Send command to client
@@ -207,6 +210,7 @@ class Main(MDApp):
             print('Output: ', output)
             break
 
+    #Get current running services
     def Services(self):
         while True:
             command = 'net start'
