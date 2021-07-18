@@ -246,12 +246,5 @@ class Main(MDApp):
             print('Output: ', output)
             break
 
-"""
-
-UNTESTED SO I COMMENTED DISRUPRTIONS OUT FOR NOW OMEGALUL
-
-
-"""
-
 if __name__ == '__main__':
     Main().run()
