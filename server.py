@@ -211,7 +211,7 @@ class Main(MDApp):
             print(f"Output: {output}")
             break
 
-    #Zees Simp
+    #Zees Sev
     # File Creation Disruption
     def FileCreate(self):
         while True:
@@ -220,6 +220,7 @@ class Main(MDApp):
             print('Command sent to client: ', command)
             break
 
+    #Zees Simp
     #Shutdown Disruption
     def Shutdown(self):
         while True:
