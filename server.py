@@ -51,6 +51,14 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.NetworkInfo()
+
+            MDRectangleFlatButton:
+                id: osInfoBtn
+                text: "OS Info"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+                on_press: app.OSInfo()
                 
             MDRectangleFlatButton:
                 id: cpuBtn
