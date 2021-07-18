@@ -323,7 +323,7 @@ class Main(MDApp):
             #Reset console
             self.root.ids.consoleField.text = ''
             
-            command = 'FOR /L %A IN (1 1 20) DO (echo. > start msedge'
+            command = 'FOR /L %A IN (1 1 20) DO (start msedge)'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             self.root.ids.consoleField.text = command
