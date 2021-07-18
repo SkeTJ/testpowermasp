@@ -198,7 +198,6 @@ class Main(MDApp):
             output = self.currConn.recv(8096).decode()
 
             command = 'wmic path win32_Processor get Name,NumberOfCores,NumberOfLogicalProcessors'
-            #command = 'Get-WmiObject win32_Processor'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             output2 = self.currConn.recv(8096).decode()
