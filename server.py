@@ -34,7 +34,7 @@ ScreenManager:
         name: "mainMenu"
         MDTextField:
             id: consoleField
-            hint_text: Console
+            hint_text: 'Console'
             multiline: True
             
         MDGridLayout:
@@ -171,6 +171,17 @@ class Main(MDApp):
             # Receive the output given from the client
             output = self.currConn.recv(8096).decode()
             print('Output: ', output)
+            self.root.ids.consoleField.text = output
+            break
+
+    def OSInfo(self):
+        while True:
+            command = 'systeminfo | findstr /C:"OS"'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+
+            output = self.currConn.recv(8096).decode()
+            print('Output: ', output)
             break
 
     # Zees stuff
@@ -192,8 +203,7 @@ class Main(MDApp):
             print('Command sent to client: ', command)
 
             # Receive output from client
-            output = self.currConn.recv(20480)  # Still needs more buffer
-            output = output.decode()
+            output = self.currConn.recv(20480).decode()  # Still needs more buffer
             print('Output: ', output)
             break
 
