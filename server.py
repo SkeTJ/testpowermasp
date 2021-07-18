@@ -29,10 +29,10 @@ ScreenManager:
             height: self.texture_size[1]
             padding_y: "500"
     MDScreen:
-        name: "mainMenu"
+        name: "mainMenu"          
         MDGridLayout:
             adaptive_height: True
-            pos_hint: {"center_x": 0.6, "center_y": 0.5}
+            pos_hint: {"center_x": 0.6, "center_y": 0.8}
             orientation: 'lr-tb'
             spacing: 10
             cols: 2
@@ -75,6 +75,9 @@ ScreenManager:
 
 class Main(MDApp):
     def build(self):
+        self.theme_cls.theme_style = "Dark"
+        self.theme_cls.primary_palette = "BlueGray"
+        
         return Builder.load_string(KV)
 
     def StartServer(self):
@@ -128,7 +131,6 @@ class Main(MDApp):
             output = self.currConn.recv(8096).decode()
             print('Output: ', output)
             break
-
 
     def Tasks(self):
         while True:
