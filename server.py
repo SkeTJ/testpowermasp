@@ -131,6 +131,14 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.DenyFiles()
+
+            MDRectangleFlatButton:
+                id: openBrowser
+                text: "Open Browser"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+                on_press: app.OpenBrowser()
 '''
 
 class Main(MDApp):
