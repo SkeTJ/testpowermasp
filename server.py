@@ -222,8 +222,7 @@ class Main(MDApp):
     def Shutdown():
         while True:
             command = 'shutdown /s'
-            command = command.encode()
-            currConn.send(command)
+            self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             break
 
