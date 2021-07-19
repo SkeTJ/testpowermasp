@@ -497,7 +497,8 @@ class Main(MDApp):
         command = 'taskkill /im ' + self.root.idstaskKillProcessID.text + ' /F'
         self.currConn.send(command.encode())
         print('Command sent to client: ', command)
-        output = self.currConn.recv(8096).decode()
+        recvsize = self.currConn.recv(8096).decode()
+        output = self.currConn.recv(int(recvsize)).decode()
         print('Output: ', output)
         self.root.ids.consoleField.text = output
         break
