@@ -51,7 +51,6 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.NetworkInfo()
-
             MDRectangleFlatButton:
                 id: osInfoBtn
                 text: "OS Info"
@@ -131,7 +130,6 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.DenyFiles()
-
             MDRectangleFlatButton:
                 id: openBrowser
                 text: "Open Browser"
@@ -141,12 +139,36 @@ ScreenManager:
                 on_press: app.OpenBrowser()
                 
             MDRectangleFlatButton:
-                id: availMem
-                text: "Available Memory"
+                id: secPolicy
+                text: "Security Policy"
                 pos_hint: {"center_x": .5, "center_y": .5}
                 opacity: 1
                 disabled: False
-                on_press: app.MemoryAvail()    
+                on_press: app.SecPolicy()
+
+            MDRectangleFlatButton:
+                id: memStatus
+                text: "Memory Status"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+                on_press: app.MemoryStatus()
+
+            MDRectangleFlatButton:
+                id: memTotal
+                text: "Total Memory"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+                on_press: app.MemoryTotal()    
+
+            MDRectangleFlatButton:
+                id: memCache
+                text: "Memory Cache"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+                on_press: app.MemoryCache()
 '''
 
 class Main(MDApp):
@@ -298,11 +320,24 @@ class Main(MDApp):
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
-            
-    def MemoryAvail(self):
+
+    #Get available memory        
+    def MemoryTotal(self):
         while True:
             self.root.ids.consoleField.text = ''
-            commmand = 'systeminfo | find "Available Physical Memory"'
+            commmand = 'systeminfo | findstr /C:"Available Physical Memory"'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            output = self.currConn.recv(8096).decode()
+            print('Output: ', output)
+            self.root.ids.consoleField.text = output
+            break
+
+    #Get memory cache
+    def MemoryCache(self):
+        while True:
+            self.root.ids.consoleField.text = ''
+            command = 'wmic cpu get L2CacheSize, L3CacheSize'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             output = self.currConn.recv(8096).decode()
