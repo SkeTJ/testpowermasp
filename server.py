@@ -433,6 +433,9 @@ class Main(MDApp):
 
     # Prevent access to file
     def DenyFiles(self):
+        # Reset console
+        self.root.ids.consoleField.text = ''
+        
         self.denyFilesDialog = MDDialog(
             title = "File Path:",
             type = "custom",
