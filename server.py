@@ -85,6 +85,7 @@ ScreenManager:
 
         MDTextField:
             id: consoleField
+            max_height: '200dp'
             hint_text: 'Console'
             multiline: True
 
