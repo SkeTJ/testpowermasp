@@ -541,6 +541,8 @@ class Main(MDApp):
     def MainMenu(self):
         self.root.current = "mainMenu"
 
+class DenyFilesContent(BoxLayout):
+    pass
 
 class TaskKillContent(BoxLayout):
     pass
