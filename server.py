@@ -92,6 +92,22 @@ ScreenManager:
                 on_press: app.UserInfo()
                 
             MDRectangleFlatButton:
+                id: secPolicy
+                text: "Security Policy"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+                on_press: app.SecPolicy()
+                
+            MDRectangleFlatButton:
+                id: memInfo
+                text: "Memory Information"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                opacity: 1
+                disabled: False
+                on_press: app.MemInfo()
+                
+            MDRectangleFlatButton:
                 id: fileCreateBtn
                 text: "File Creation Disruption"
                 pos_hint: {"center_x": .5, "center_y": .5}
@@ -137,38 +153,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.OpenBrowser()
-                
-            MDRectangleFlatButton:
-                id: secPolicy
-                text: "Security Policy"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.SecPolicy()
-
-            MDRectangleFlatButton:
-                id: memStatus
-                text: "Memory Status"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.MemoryStatus()
-
-            MDRectangleFlatButton:
-                id: memAvail
-                text: "Available Memory"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.MemoryAvail()    
-
-            MDRectangleFlatButton:
-                id: memCache
-                text: "Memory Cache"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.MemoryCache()
+          
 '''
 
 class Main(MDApp):
@@ -308,42 +293,36 @@ class Main(MDApp):
             self.root.ids.consoleField.text = output
             break
             
-    #Get memory status
-    def MemoryStatus(self):
+    #get memory information        
+    def MemInfo(self):
         while True:
             #reset console
             self.root.ids.consoleField.text = ''
+            
+            #memory status
             command = 'wmic MEMORYCHIP get BankLabel, DeviceLocator, Capacity, Speed'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             output = self.currConn.recv(8096).decode()
-            print('Output: ', output)
-            self.root.ids.consoleField.text = output
-            break
-
-    #Get available memory        
-    def MemoryAvail(self):
-        while True:
-            self.root.ids.consoleField.text = ''
+            #available memory
             command = 'systeminfo | findstr /C:"Available Physical Memory"'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            output = self.currConn.recv(8096).decode()
-            print('Output: ', output)
-            self.root.ids.consoleField.text = output
-            break
-
-    #Get memory cache
-    def MemoryCache(self):
-        while True:
-            self.root.ids.consoleField.text = ''
+            output2 = self.currConn.recv(8096).decode()
+            #cache
             command = 'wmic cpu get L2CacheSize, L3CacheSize'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            output = self.currConn.recv(8096).decode()
-            print('Output: ', output)
-            self.root.ids.consoleField.text = output
+            output3 = self.currConn.recv(8096).decode()
+            
+            #print result
+            print('Output: \n')
+            print(output)
+            print(output2)
+            print(output3)
             break
+            
+   
 
     # Fang's stuffz
     def UserInfo(self):
