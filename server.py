@@ -28,118 +28,111 @@ ScreenManager:
             size_hint_y: None
             height: self.texture_size[1]
             padding_y: "500"
+            
     MDScreen:
-        name: "mainMenu"
+        name: "mainMenu"            
+        ScrollView:
+            MDList:
+                OneLineListItem:
+                    id: networkInfoBtn
+                    text: "Network Info"
+                    on_press: app.NetworkInfo()
+
+                OneLineListItem:
+                    id: osInfoBtn
+                    text: "OS Info"
+                    on_press: app.OSInfo()
+
+                OneLineListItem:
+                    id: cpuBtn
+                    text: "CPU Usage"
+                    on_press: app.CpuUsage()
+
+                OneLineListItem:
+                    id: taskBtn
+                    text: "Task List"
+                    on_press: app.Tasks()
+
+                OneLineListItem:
+                    id: netserviceBtn
+                    text: "Network Services"
+                    on_press: app.Services()
+
+                OneLineListItem:
+                    id: userInfoBtn
+                    text: "User Information"
+                    on_press: app.UserInfo()
+
+                OneLineListItem:
+                    id: secPolicy
+                    text: "Security Policy"
+                    on_press: app.SecPolicy()
+
+                OneLineListItem:
+                    id: memInfo
+                    text: "Memory Information"
+                    on_press: app.MemInfo()
+
         MDTextField:
             id: consoleField
             hint_text: 'Console'
             multiline: True
-        MDGridLayout:
-            adaptive_height: True
-            pos_hint: {"center_x": 0.9, "center_y": 0.5}
-            orientation: 'lr-tb'
-            spacing: 10
-            cols: 2
-            MDRectangleFlatButton:
-                id: networkInfoBtn
-                text: "Network Info"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.NetworkInfo()
-            MDRectangleFlatButton:
-                id: osInfoBtn
-                text: "OS Info"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.OSInfo()
-            MDRectangleFlatButton:
-                id: cpuBtn
-                text: "CPU Usage"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.CpuUsage()
-            MDRectangleFlatButton:
-                id: taskBtn
-                text: "Task List"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.Tasks()
-            MDRectangleFlatButton:
-                id: netserviceBtn
-                text: "Network Services"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.Services()
-            MDRectangleFlatButton:
-                id: userInfoBtn
-                text: "User Information"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.UserInfo()
-            MDRectangleFlatButton:
-                id: secPolicy
-                text: "Security Policy"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.SecPolicy()
-            MDRectangleFlatButton:
-                id: memInfo
-                text: "Memory Information"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.MemInfo()
-            MDRectangleFlatButton:
-                id: fileCreateBtn
-                text: "File Creation Disruption"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.FileCreate()
-            MDRectangleFlatButton:
-                id: firewallBtn
-                text: "Firewall"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.Firewall()
-            MDRectangleFlatButton:
-                id: shutDownBtn
-                text: "Shutdown"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.Shutdown()
-            MDRectangleFlatButton:
-                id: killTaskBtn
-                text: "Kill Task"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.KillTask()
-            MDRectangleFlatButton:
-                id: denyFileBtn
-                text: "Deny Files"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.DenyFiles()
-            MDRectangleFlatButton:
-                id: openBrowser
-                text: "Open Browser"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                opacity: 1
-                disabled: False
-                on_press: app.OpenBrowser()
-'''
 
+        MDIconButton:
+            icon: "spider-thread"
+            md_bg_color: 'red'
+            pos_hint: {"center_x": .95, "center_y": .1} 
+            elevation_normal: 12
+            on_press: app.DisruptionMenu()
+
+
+    MDScreen:
+        name: "disruptionMenu"
+        ScrollView:
+            MDList:
+                OneLineListItem:
+                    id: killTaskBtn
+                    text: "Kill Task"
+                    on_press: app.KillTask()
+                    
+                OneLineListItem:
+                    id: shutDownBtn
+                    text: "Shutdown"
+                    on_press: app.Shutdown()
+                    
+                OneLineListItem:
+                    id: fileCreateBtn
+                    text: "File Creation Disruption"
+                    on_press: app.FileCreate()
+                    
+                OneLineListItem:
+                    id: firewallBtn
+                    text: "Firewall"
+                    on_press: app.Firewall()
+
+                OneLineListItem:
+                    id: denyFileBtn
+                    text: "Deny Files"
+                    on_press: app.DenyFiles()
+                    
+                OneLineListItem:
+                    id: openBrowser
+                    text: "Open Browsers"
+                    on_press: app.OpenBrowser()
+
+        MDTextField:
+            id: consoleField
+            hint_text: 'Console'
+            multiline: True
+
+        MDIconButton:
+            icon: "menu"
+            md_bg_color: 'lightblue'
+            pos_hint: {"center_x": .95, "center_y": .1} 
+            elevation_normal: 12
+            on_press: app.MainMenu()
+        
+'''
 
 class Main(MDApp):
     def build(self):
@@ -471,6 +464,12 @@ class Main(MDApp):
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
+
+    def DisruptionMenu(self):
+        self.root.current = "disruptionMenu"
+
+    def MainMenu(self):
+        self.root.current = "mainMenu"
 
 
 if __name__ == '__main__':
