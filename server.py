@@ -195,8 +195,8 @@ class Main(MDApp):
             print('Command sent to client: ', command)
 
             # Receive the output given from the client
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            #recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(1024)).decode()
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
