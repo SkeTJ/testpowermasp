@@ -499,14 +499,15 @@ class Main(MDApp):
         self.killTaskDialog.dismiss(force=True)
 
     def ExecuteKillTask(self):
-        command = 'taskkill /im ' + self.root.idstaskKillProcessID.text + ' /F'
-        self.currConn.send(command.encode())
-        print('Command sent to client: ', command)
-        recvsize = self.currConn.recv(8096).decode()
-        output = self.currConn.recv(int(recvsize)).decode()
-        print('Output: ', output)
-        self.root.ids.consoleField.text = output
-        break
+        while True:
+            command = 'taskkill /im ' + self.root.ids.idstaskKillProcessID.text + ' /F'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            recvsize = self.currConn.recv(8096).decode()
+            output = self.currConn.recv(int(recvsize)).decode()
+            print('Output: ', output)
+            self.root.ids.consoleField.text = output
+            break
 
     def DisruptionMenu(self):
         self.root.current = "disruptionMenu"
