@@ -49,6 +49,11 @@ ScreenManager:
                     on_press: app.OSInfo()
 
                 OneLineListItem:
+                    id: gpuInfoBtn
+                    text: "GPU Info"
+                    on_press: app.GpuInfo()
+
+                OneLineListItem:
                     id: cpuBtn
                     text: "CPU Usage"
                     on_press: app.CpuUsage()
