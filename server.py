@@ -474,26 +474,24 @@ class Main(MDApp):
 
     #Kill Task Disruption
     def KillTask(self):
-        while True:
-            # Reset console
-            self.root.ids.consoleField.text = ''
+        # Reset console
+        self.root.ids.consoleField.text = ''
 
-            self.killTaskDialog = MDDialog(
-                title = "Task Kill:",
-                type = "custom",
-                content_cls = TaskKillContent(),
-                buttons = [
-                    MDFlatButton(
-                        text = "CANCEL", on_press = lambda x: self.DismissKillTaskDialog()
-                        ),
-                    MDFlatButton(
-                        text = "OK", on_press = lambda x: self.ExecuteKillTask()
-                        ),
-                    ],
-                )
-            
-            self.killTaskDialog.open()
-            break
+        self.killTaskDialog = MDDialog(
+            title = "Task Kill:",
+            type = "custom",
+            content_cls = TaskKillContent(),
+            buttons = [
+                MDFlatButton(
+                    text = "CANCEL", on_press = lambda x: self.DismissKillTaskDialog()
+                    ),
+                MDFlatButton(
+                    text = "OK", on_press = lambda x: self.ExecuteKillTask()
+                    ),
+                ],
+            )
+        
+        self.killTaskDialog.open()
 
     def DismissKillTaskDialog(self, *args):
         self.killTaskDialog.dismiss(force=True)
