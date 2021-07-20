@@ -174,7 +174,7 @@ class Main(MDApp):
         # print('Server started!')
 
         # A max of one client can be listend at a time
-        self.server.listen(1)
+        self.server.listen(3)
         self.root.ids.statusLbl.text = 'Listening for a client connection to be established...'
         # print('Listening for a client connection to be established...')
         self.root.ids.startBtn.disabled = True
