@@ -241,7 +241,7 @@ class Main(MDApp):
             output3 = self.currConn.recv(int(recvsize3)).decode()
 
             # Print results
-            print('Output: \n')
+            print('Output:')
             print(output)
             print(output2)
             print(output3)
@@ -277,7 +277,7 @@ class Main(MDApp):
             output3 = self.currConn.recv(int(recvsize3)).decode()
 
             # Print results
-            print('Output: \n')
+            print('Output:')
             print(output)
             print(output2)
             print(output3)
