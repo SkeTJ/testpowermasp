@@ -156,7 +156,7 @@ ScreenManager:
         hint_text: 'Enter File Path'
 '''
 # Server IP and Port
-HOST = '192.168.123.165'  # Temporary localhost for testing (Make sure to use the client's IP during production
+HOST = '127.0.0.1'  # Temporary localhost for testing (Make sure to use the client's IP during production
 PORT = 21420
 
 class Main(MDApp):
