@@ -156,7 +156,7 @@ ScreenManager:
         hint_text: 'Enter File Path'
 '''
 # Server IP and Port
-HOST = '192.168.123.165'  # Temporary localhost for testing (Make sure to use the client's IP during production
+HOST = '127.0.0.1'  # Temporary localhost for testing (Make sure to use the client's IP during production
 PORT = 21420
 
 class Main(MDApp):
@@ -174,7 +174,7 @@ class Main(MDApp):
         # print('Server started!')
 
         # A max of one client can be listend at a time
-        self.server.listen(3)
+        self.server.listen(1)
         self.root.ids.statusLbl.text = 'Listening for a client connection to be established...'
         # print('Listening for a client connection to be established...')
         self.root.ids.startBtn.disabled = True
