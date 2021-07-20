@@ -2,7 +2,6 @@ import os
 import socket
 import threading
 import sys
-from functools import partial
 import time
 import kivy
 import kivymd
