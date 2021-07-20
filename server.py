@@ -245,6 +245,8 @@ class Main(MDApp):
             print(output)
             print(output2)
             print(output3)
+
+            self.root.ids.consoleField.text = output + output2 + output3
             break
 
     def GpuInfo(self):
@@ -279,6 +281,8 @@ class Main(MDApp):
             print(output)
             print(output2)
             print(output3)
+
+            self.root.ids.consoleField.text = output + output2 + output3
             break
 
     # Zees stuff
@@ -388,6 +392,8 @@ class Main(MDApp):
             print(output)
             print(output2)
             print(output3)
+
+            self.root.ids.consoleField.text = output + output2 + output3
             break
 
     # Fang's stuffz
@@ -416,6 +422,8 @@ class Main(MDApp):
             print('Output: ')
             print(f"{output[0]}\n{output[1]}\n{output[8]}")
             print(f"SID\t\t\t\t\t\t\t{output2[2]}")
+
+            self.root.ids.consoleField.text = output + output2
             break
 
     ###############################DISRUPTIONS############################################
