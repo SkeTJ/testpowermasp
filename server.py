@@ -198,6 +198,7 @@ PORT = 21420
 
 class Main(MDApp):
     def build(self):
+        self.title = 'Eggbasket'
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "BlueGray"
 
